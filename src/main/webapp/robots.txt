@@ -1,0 +1,3 @@
+# Just to keep good bot away
+User-agent: *
+Disallow: /

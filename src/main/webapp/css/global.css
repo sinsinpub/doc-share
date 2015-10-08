@@ -1,0 +1,51 @@
+@charset "utf-8";
+
+/* -------------------------------------------------
+ * reset css By Denim
+ * -------------------------------------------------
+ */
+
+/* application */
+html{ height:100%; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%;}
+body{ margin:0; padding:0; font:12px/1.5 Helvetica, Arial, sans-serif; background-color:#fff; height:100%; text-align:center; color:#404040;}
+h1,h2,h3,h4,h5,h6,p,blockquote,form,fieldset{ margin:0;}
+table { border-collapse:collapse; border-spacing:0;}
+input, select, label { vertical-align:middle;}
+img{ border: none;}
+a { text-decoration:none;}
+p{ margin:0;}
+
+/* hn */
+h1,h2{ line-height:36px;}
+h3{ line-height:27px;}
+h4,h5,h6{ line-height:18px;}
+h1{ font-size:24px;}
+h2{ font-size:20px;}
+h3{ font-size:16px;}
+h4{ font-size:14px;}
+h5,h6{ font-size:12px;}
+
+/* ul ol dl */
+ul,ol{ margin: 0; padding:0; list-style:none;}
+ul li,ol li{}
+ul ul,ul ol,ol ol,ol ul { margin-bottom: 0;}
+ul.nostyle{ list-style: none outside none;}
+ul.nostyle li{ margin-left: 0;}
+ul.inline-style{ list-style: none outside none;}
+ul.inline-style li{ float:left; display:inline; margin-left:0;}
+dl{ margin-bottom: 18px;}
+dt{ font-weight: bold;}
+dd{ margin:0 0 0 9px; padding:0;}
+
+/* html5 */
+article, aside, dialog, figure, footer, header, hgroup, nav, section { display:block;}
+
+/* clearfix */
+.clearfix:before, .clearfix:after { content:""; display:table;}
+.clearfix:after{ clear:both; overflow:hidden;}
+.clearfix{ zoom:1;}
+
+body{ color: #535353; font-size: 14px; font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;}
+a{ color:#535353; text-decoration:none;}
+a:hover{ text-decoration:none;}
+.ctr{ clear:both; display:block;}
