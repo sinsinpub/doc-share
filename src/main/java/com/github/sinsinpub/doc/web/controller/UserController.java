@@ -1,7 +1,5 @@
 package com.github.sinsinpub.doc.web.controller;
 
-import java.util.UUID;
-
 import com.github.sinsinpub.doc.web.RoutesDefines;
 import com.github.sinsinpub.doc.web.model.User;
 import com.google.common.base.Preconditions;
@@ -22,26 +20,24 @@ public class UserController extends Controller {
     }
 
     public void get() {
-        String id = getPara(0);
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(id), "Required id missing");
-        User user = User.REPO.findById(id);
+        String cond = getPara(0);
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(cond), "Required parameter missing");
+        User user = User.REPO.findById(cond);
+        if (user == null) {
+            user = User.REPO.findByEmail(cond);
+        }
         renderJson(user);
     }
 
     public void create() {
-
-        User user = new User();
-        user.set(User.ID, UUID.randomUUID().toString());
-        user.set(User.EMAIL, "admin@yourdomain");
-        user.set(User.NICKNAME, "Administrator");
-        user.set(User.SPACE_URL, "admin");
-        user.set(User.PW_HASH, "hmac-sha256");
-        user.set(User.PW_SALT, "public-random-salt");
-        user.set(User.ROLE, "admin");
-
-        user.save();
-
+        String adminEmail = "admin@yourdomain";
+        User user = User.REPO.addDistinctUser(adminEmail, "Administrator", "admin", "hmac-sha256",
+                "public-random-salt", "admin");
         renderJson(user);
+    }
+
+    public void all() {
+        renderJson(User.REPO.fetchAll());
     }
 
 }

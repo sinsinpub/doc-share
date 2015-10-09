@@ -22,7 +22,8 @@ public class DocFile extends Model<DocFile> {
     public static final String DOWNLOAD_COUNT = "dl_count";
     public static final String DISCONTINUE_AFTER = "discont_after";
     public static final String IS_BLOCKED = "blocked";
-    public static final String USER = "user";
+    public static final String BELONG_USER = "user";
+    public static final String UPLOAD_FROM = "upload_from";
     public static final String UPLOAD_AT = "upload_at";
     public static final String LAST_DOWNLOAD_AT = "last_dl_at";
 

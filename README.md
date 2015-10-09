@@ -29,4 +29,4 @@ mvn test -Dtest=com.github.sinsinpub.doc.web.model.manual.InitDbTables
 java -jar target\doc-share.war [port] [context]
 ```
 
-* 如果没有加port等参数并且顺序启动。打开`http://localhost/`即可Enjoy!
+* 如果没有加port等参数并且顺利启动。浏览器打开`http://localhost/`即可Enjoy!
