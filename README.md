@@ -8,10 +8,10 @@ Simple Web App for quickly sharing small files & document snippets.
 * 签出源代码
 
 ```
-git clone doc-share.git
+git clone this-repo.git
 ````
 
-* 进入doc-share目录，构建、打包，生成`doc-share.war`
+* 进入this-repo目录，构建、打包，生成`doc-share.war`
 
 ```
 mvn package
@@ -29,4 +29,4 @@ mvn test -Dtest=com.github.sinsinpub.doc.web.model.manual.InitDbTables
 java -jar target\doc-share.war [port] [context]
 ```
 
-* 如果没有加port等参数并且顺利启动。浏览器打开`http://localhost/`即可Enjoy!
+* 如果没有加port等参数并且顺利启动，浏览器打开`http://localhost/`即可Enjoy!

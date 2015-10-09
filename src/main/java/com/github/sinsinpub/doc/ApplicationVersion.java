@@ -3,11 +3,12 @@ package com.github.sinsinpub.doc;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Properties;
 
-import com.google.common.base.MoreObjects;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.commons.lang3.time.DateFormatUtils;
+
 import com.google.common.base.Strings;
 import com.google.common.io.Closeables;
 import com.google.common.primitives.Longs;
@@ -100,8 +101,7 @@ public class ApplicationVersion implements Serializable, Cloneable {
         String timestamp = app.getProperty("scm.timestamp");
         Long date = Longs.tryParse(timestamp);
         if (date != null) {
-            scmVersion += ","
-                    + new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date(date));
+            scmVersion += "," + DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.format(date);
         }
         ciVersion = app.getProperty("ci.buildTag") + "," + app.getProperty("ci.buildId");
         // 将构建号和版本控制号加入应用版本标识
@@ -116,16 +116,7 @@ public class ApplicationVersion implements Serializable, Cloneable {
 
     @Override
     public String toString() {
-        return MoreObjects.toStringHelper(this)
-                .add("projectGroupId", getProjectGroupId())
-                .add("projectArtifactId", getProjectArtifactId())
-                .add("projectVersion", getProjectVersion())
-                .add("applicationName", getApplicationName())
-                .add("applicationVersion", getApplicationVersion())
-                .add("buildProfile", getBuildProfile())
-                .add("scmVersion", getScmVersion())
-                .add("ciVersion", getCiVersion())
-                .toString();
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
 
     @Override

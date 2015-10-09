@@ -4,8 +4,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.github.sinsinpub.doc.utils.DatetimeFormatUtils;
-import com.google.common.base.Strings;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 
@@ -52,13 +53,13 @@ public class AuditLog extends Model<AuditLog> {
         long time = System.currentTimeMillis();
         log.set(ID, id.toString());
         log.set(TIMESTAMP, time);
-        log.set(ADDR, Strings.nullToEmpty(addr).substring(0, 50));
-        log.set(USER, Strings.nullToEmpty(user).substring(0, 130));
+        log.set(ADDR, StringUtils.abbreviate(addr, 50));
+        log.set(USER, StringUtils.abbreviate(user, 130));
         log.set(TIME, DatetimeFormatUtils.formatIso(new Date(time)));
-        log.set(METHOD, Strings.nullToEmpty(method).substring(0, 60));
-        log.set(URI, Strings.nullToEmpty(uri).substring(0, 255));
-        log.set(AGENT, Strings.nullToEmpty(agent).substring(0, 255));
-        log.set(EXT, Strings.nullToEmpty(ext).substring(0, 255));
+        log.set(METHOD, StringUtils.abbreviate(method, 60));
+        log.set(URI, StringUtils.abbreviate(uri, 255));
+        log.set(AGENT, StringUtils.abbreviate(agent, 255));
+        log.set(EXT, StringUtils.abbreviate(ext, 255));
         return log.save();
     }
 
@@ -67,10 +68,11 @@ public class AuditLog extends Model<AuditLog> {
     }
 
     public Page<AuditLog> fetchPage(int pageNumber, int pageSize, String whereSql, Object... paras) {
-        String querySql = String.format("from %s where %s order by %s desc", TABLE, whereSql,
-                TIMESTAMP);
-        if (Strings.isNullOrEmpty(whereSql)) {
+        String querySql = null;
+        if (StringUtils.isBlank(whereSql)) {
             querySql = String.format("from %s order by %s desc", TABLE, TIMESTAMP);
+        } else {
+            querySql = String.format("from %s where %s order by %s desc", TABLE, whereSql, TIMESTAMP);
         }
         return paras == null ? paginate(pageNumber, pageSize, "select *", querySql) : paginate(
                 pageNumber, pageSize, "select *", querySql, paras);

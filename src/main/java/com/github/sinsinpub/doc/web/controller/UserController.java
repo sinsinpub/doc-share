@@ -92,6 +92,11 @@ public class UserController extends Controller {
             }
         }
 
+        @Override
+        protected boolean isResponseStatusOk() {
+            return true;
+        }
+
     }
 
 }

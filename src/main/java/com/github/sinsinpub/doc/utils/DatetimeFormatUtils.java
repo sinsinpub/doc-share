@@ -10,6 +10,7 @@ import java.util.Locale;
  * String.format pattern details: <a
  * href="http://docs.oracle.com/javase/6/docs/api/java/util/Formatter.html#syntax">Formatter</a>
  * 
+ * @see org.apache.commons.lang3.time.DateFormatUtils
  * @author sin_sin
  * @version $Date: Oct 8, 2015 $
  */

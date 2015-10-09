@@ -1,9 +1,8 @@
 package com.github.sinsinpub.doc.web.controller;
 
-import org.eclipse.jetty.http.HttpStatus;
-
 import com.github.sinsinpub.doc.web.exception.DataNotFoundException;
 import com.github.sinsinpub.doc.web.exception.RuntimeSqlException;
+import com.google.common.base.Throwables;
 import com.jfinal.aop.Interceptor;
 import com.jfinal.aop.Invocation;
 import com.jfinal.core.ActionException;
@@ -23,6 +22,8 @@ public class JsonExceptionRenderer extends Controller implements Interceptor {
     public static final String ERROR_JSON_KEY = "error";
     private static final Logger LOG = Logger.getLogger(JsonExceptionRenderer.class);
 
+    private boolean retrievingRootCauseMessage = true;
+
     @Override
     public void intercept(Invocation inv) {
         if (inv.isActionInvocation()) {
@@ -41,26 +42,39 @@ public class JsonExceptionRenderer extends Controller implements Interceptor {
     }
 
     protected void handleException(RuntimeException e) {
-        int statusCode = HttpStatus.INTERNAL_SERVER_ERROR_500;
-        String message = e.getMessage();
+        int statusCode = 500;
+        String message = isRetrievingRootCauseMessage() ? getMessageIfPossible(Throwables.getRootCause(e))
+                : getMessageIfPossible(e);
         try {
             throw e;
         } catch (IllegalArgumentException iae) {
-            statusCode = HttpStatus.BAD_REQUEST_400;
+            statusCode = 400; // Bad Request
         } catch (DataNotFoundException dnfe) {
-            statusCode = HttpStatus.NOT_FOUND_404;
+            statusCode = 404; // Not Found
         } catch (NullPointerException npe) {
-            statusCode = HttpStatus.INTERNAL_SERVER_ERROR_500;
+            statusCode = 500;
         } catch (IllegalStateException ise) {
-            statusCode = HttpStatus.INTERNAL_SERVER_ERROR_500;
+            statusCode = 500;
         } catch (ActiveRecordException are) {
-            statusCode = HttpStatus.INTERNAL_SERVER_ERROR_500;
+            statusCode = 500;
         } catch (RuntimeSqlException rse) {
-            statusCode = HttpStatus.INTERNAL_SERVER_ERROR_500;
+            statusCode = 500;
         } finally {
             LOG.warn(String.format("Response with: %d, %s", statusCode, message));
             renderError(statusCode, RenderFactory.me().getJsonRender(ERROR_JSON_KEY, message));
         }
+    }
+
+    protected String getMessageIfPossible(Throwable t) {
+        return t.getMessage() == null ? t.toString() : t.getMessage();
+    }
+
+    public boolean isRetrievingRootCauseMessage() {
+        return retrievingRootCauseMessage;
+    }
+
+    public void setRetrievingRootCauseMessage(boolean retrievingRootCauseMessage) {
+        this.retrievingRootCauseMessage = retrievingRootCauseMessage;
     }
 
 }

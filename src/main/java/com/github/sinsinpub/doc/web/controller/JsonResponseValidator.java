@@ -5,7 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.jfinal.core.Controller;
+import com.jfinal.kit.JsonKit;
 import com.jfinal.kit.StrKit;
+import com.jfinal.log.Logger;
 import com.jfinal.render.RenderFactory;
 import com.jfinal.validate.Validator;
 
@@ -18,6 +20,7 @@ import com.jfinal.validate.Validator;
 public abstract class JsonResponseValidator extends Validator {
 
     protected static final String ERROR_KEY_PREFIX = "validator.";
+    protected final Logger logger = Logger.getLogger(getClass());
 
     @Override
     protected void handleError(Controller c) {
@@ -30,7 +33,13 @@ public abstract class JsonResponseValidator extends Validator {
                 errorMsgs.put(attr, c.getAttrForStr(attr));
             }
         }
-        c.renderError(isResponseStatusOk() ? 200 : 400, RenderFactory.me().getJsonRender(errorMsgs));
+        logger.info("Validator reports: " + JsonKit.toJson(errorMsgs));
+        if (isResponseStatusOk()) {
+            c.renderJson(errorMsgs);
+            return;
+        } else {
+            c.renderError(400, RenderFactory.me().getJsonRender(errorMsgs));
+        }
     }
 
     protected boolean isResponseStatusOk() {
@@ -38,8 +47,9 @@ public abstract class JsonResponseValidator extends Validator {
     }
 
     protected void validateRequiredStringValue(String str, String errorKey, String errorMessage) {
-        if (StrKit.isBlank(str))
+        if (StrKit.isBlank(str)) {
             addError(errorKey, errorMessage);
+        }
     }
 
 }
