@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import com.github.sinsinpub.doc.web.DataSourceInitializer;
 import com.github.sinsinpub.doc.web.model.AuditLog;
+import com.github.sinsinpub.doc.web.model.DocFile;
 import com.github.sinsinpub.doc.web.model.User;
 import com.jfinal.log.Logger;
 import com.jfinal.plugin.IPlugin;
@@ -29,8 +30,16 @@ public class DbViewer {
 
     @Test
     public void listUser() {
-        List<User> list = User.REPO.find("select * from " + User.TABLE);
+        List<User> list = User.REPO.fetchAll();
         for (User r : list) {
+            logger.info(r.toJson());
+        }
+    }
+
+    @Test
+    public void listDocFile() {
+        List<DocFile> list = DocFile.REPO.fetchAll();
+        for (DocFile r : list) {
             logger.info(r.toJson());
         }
     }

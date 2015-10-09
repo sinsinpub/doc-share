@@ -86,7 +86,7 @@ public class User extends Model<User> {
     }
 
     public User findByEmail(String email) {
-        return findFirst(String.format("select * from %s where %s=?", TABLE, EMAIL), email);
+        return findFirst(String.format("select * from %s where %s = ? limit 1", TABLE, EMAIL), email);
     }
 
     public List<User> fetchAll() {

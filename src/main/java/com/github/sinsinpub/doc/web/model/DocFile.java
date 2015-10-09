@@ -1,5 +1,7 @@
 package com.github.sinsinpub.doc.web.model;
 
+import java.util.List;
+
 import com.jfinal.plugin.activerecord.Model;
 
 /**
@@ -30,6 +32,10 @@ public class DocFile extends Model<DocFile> {
     public static final DocFile REPO = new DocFile();
 
     public DocFile() {
+    }
+
+    public List<DocFile> fetchAll() {
+        return REPO.find(String.format("select * from %s order by %s desc", TABLE, UPLOAD_AT));
     }
 
 }
