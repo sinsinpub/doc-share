@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.UUID;
 
 import com.github.sinsinpub.doc.web.exception.RuntimeSqlException;
+import com.github.sinsinpub.doc.web.service.UserService;
 import com.google.common.base.Preconditions;
+import com.jfinal.aop.Enhancer;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Model;
 
@@ -37,6 +39,7 @@ public class User extends Model<User> {
     public static final String LAST_SIGNIN_AT = "last_signin_at";
 
     public static final User REPO = new User();
+    public static final UserService SERVICE = Enhancer.enhance(new UserService());
 
     public User() {
     }
@@ -54,8 +57,9 @@ public class User extends Model<User> {
         return user;
     }
 
-    public boolean addDistinctUser(User user) {
-        return saveOrUpdateDistinctUser(user);
+    public User addDistinctUser(User user) {
+        saveOrUpdateDistinctUser(user);
+        return user;
     }
 
     public boolean saveOrUpdateDistinctUser(User user) {

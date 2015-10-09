@@ -16,6 +16,7 @@ import com.jfinal.plugin.activerecord.Page;
  * @author sin_sin
  * @version $Date: Oct 8, 2015 $
  */
+@Before(JsonExceptionRenderer.class)
 public class LogViewController extends Controller {
 
     public void index() {

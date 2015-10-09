@@ -38,21 +38,28 @@ public class AuditLog extends Model<AuditLog> {
 
     public void addAccessLog(String method, String uri, String addr, String agent, String user,
             String more) {
+        saveNewAuditLog(addr, user, method, uri, agent, more);
+    }
+
+    public void addOpLog(String action, String args, String addr, String user, String memo) {
+        saveNewAuditLog(addr, user, action, args, "Internal Operation", memo);
+    }
+
+    private boolean saveNewAuditLog(String addr, String user, String method, String uri,
+            String agent, String ext) {
         AuditLog log = new AuditLog();
         UUID id = UUID.randomUUID();
         long time = System.currentTimeMillis();
-
         log.set(ID, id.toString());
         log.set(TIMESTAMP, time);
-        log.set(ADDR, addr);
-        log.set(USER, user);
+        log.set(ADDR, Strings.nullToEmpty(addr).substring(0, 50));
+        log.set(USER, Strings.nullToEmpty(user).substring(0, 130));
         log.set(TIME, DatetimeFormatUtils.formatIso(new Date(time)));
-        log.set(METHOD, method);
-        log.set(URI, uri);
-        log.set(AGENT, agent);
-        log.set(EXT, more);
-
-        log.save();
+        log.set(METHOD, Strings.nullToEmpty(method).substring(0, 60));
+        log.set(URI, Strings.nullToEmpty(uri).substring(0, 255));
+        log.set(AGENT, Strings.nullToEmpty(agent).substring(0, 255));
+        log.set(EXT, Strings.nullToEmpty(ext).substring(0, 255));
+        return log.save();
     }
 
     public List<AuditLog> fetchAll() {
