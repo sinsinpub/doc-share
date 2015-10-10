@@ -1,11 +1,25 @@
+/**
+ * Copyright (c) 2011-2015, James Zhan 詹波 (jfinal@126.com).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.jfinal.server;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.ServerSocket;
-import java.net.URL;
-import java.security.ProtectionDomain;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.SessionManager;
@@ -21,27 +35,30 @@ import com.jfinal.kit.PathKit;
 import com.jfinal.kit.StrKit;
 
 /**
- * 原版的JettyServer不适应直接从WAR启动，只好另外写这个.
- * 
- * @author sin_sin
- * @version $Date: Oct 8, 2015 $
+ * JettyServer is used to config and start jetty web server. Jetty version 8.1.8
  */
-public class JettyWarServer implements IServer {
+class JettyServer implements IServer {
 
+    private String webAppDir;
     private int port;
     private String context;
+    private int scanIntervalSeconds;
     private boolean running = false;
     private Server server;
     private WebAppContext webApp;
 
-    public JettyWarServer(int port, String context) {
+    JettyServer(String webAppDir, int port, String context, int scanIntervalSeconds) {
+        if (webAppDir == null)
+            throw new IllegalStateException("Invalid webAppDir of web server: " + webAppDir);
         if (port < 0 || port > 65536)
             throw new IllegalArgumentException("Invalid port of web server: " + port);
         if (StrKit.isBlank(context))
             throw new IllegalStateException("Invalid context of web server: " + context);
 
+        this.webAppDir = webAppDir;
         this.port = port;
         this.context = context;
+        this.scanIntervalSeconds = scanIntervalSeconds;
     }
 
     public void start() {
@@ -70,7 +87,7 @@ public class JettyWarServer implements IServer {
         if (!available(port))
             throw new IllegalStateException("port: " + port + " already in use!");
 
-        // deleteSessionData();
+        deleteSessionData();
 
         System.out.println("Starting JFinal " + Const.JFINAL_VERSION);
         server = new Server();
@@ -78,48 +95,55 @@ public class JettyWarServer implements IServer {
         connector.setPort(port);
         server.addConnector(connector);
         webApp = new WebAppContext();
-        // 在启动过程中允许抛出异常终止启动并退出 JVM
-        webApp.setThrowUnavailableOnStartupException(true);
+        webApp.setThrowUnavailableOnStartupException(true); // 在启动过程中允许抛出异常终止启动并退出 JVM
         webApp.setContextPath(context);
-        // webApp.setResourceBase(webAppDir);
-        webApp.setWar(getWarLocation());
+        webApp.setResourceBase(webAppDir);
+        // webApp.setWar(JettyWarServer.getWarLocation());
         webApp.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
         webApp.setInitParameter("org.eclipse.jetty.servlet.Default.useFileMappedBuffer", "false");
-        // webApp.setInitParams(Collections.singletonMap(
-        // "org.mortbay.jetty.servlet.Default.useFileMappedBuffer", "false"));
+        // webApp.setInitParams(Collections.singletonMap("org.mortbay.jetty.servlet.Default.useFileMappedBuffer",
+        // "false"));
         // webApp.setAttribute(WebInfConfiguration.WEBINF_JAR_PATTERN, ".*\\.jar$");
         // 允许暴露jar中的META-INF/resources资源
         webApp.setAttribute(WebInfConfiguration.CONTAINER_JAR_PATTERN, ".*\\.jar$");
 
-        // persistSession(webApp);
+        persistSession(webApp);
 
         server.setHandler(webApp);
         changeClassLoader(webApp);
 
+        // configureScanner
+        if (scanIntervalSeconds > 0) {
+            Scanner scanner = new Scanner(PathKit.getRootClassPath(), scanIntervalSeconds) {
+                public void onChange() {
+                    try {
+                        System.err.println("\nLoading changes ......");
+                        webApp.stop();
+                        JFinalClassLoader loader = new JFinalClassLoader(webApp, getClassPath());
+                        webApp.setClassLoader(loader);
+                        webApp.start();
+                        System.err.println("Loading complete.");
+                    } catch (Exception e) {
+                        System.err.println("Error reconfiguring/restarting webapp after change in watched files");
+                        e.printStackTrace();
+                    }
+                }
+            };
+            System.out.println("Starting scanner at interval of " + scanIntervalSeconds
+                    + " seconds.");
+            scanner.start();
+        }
+
         try {
             System.out.println("Starting web server on port: " + port);
             server.start();
-            System.out.println("Starting Complete. Welcome To The JFinal World :)");
+            System.out.println("Starting Complete. Welcome To The JFinal World :P");
             server.join();
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(100);
         }
         return;
-    }
-
-    /**
-     * Returns the location of the war (a trick, which is necessary for executable wars please see:
-     * <a target="_blank" href=
-     * "http://uguptablog.blogspot.de/2012/09/embedded-jetty-executable-war-with.html" >Embedded
-     * Jetty with executable WAR</a>).
-     * 
-     * @return The war location.
-     */
-    static String getWarLocation() {
-        ProtectionDomain protectionDomain = JettyWarServer.class.getProtectionDomain();
-        URL location = protectionDomain.getCodeSource().getLocation();
-        return location.toExternalForm();
     }
 
     private void changeClassLoader(WebAppContext webApp) {
@@ -136,7 +160,6 @@ public class JettyWarServer implements IServer {
         return System.getProperty("java.class.path");
     }
 
-    @SuppressWarnings("unused")
     private void deleteSessionData() {
         try {
             FileKit.delete(new File(getStoreDir()));
@@ -151,7 +174,6 @@ public class JettyWarServer implements IServer {
         return storeDir;
     }
 
-    @SuppressWarnings("unused")
     private void persistSession(WebAppContext webApp) {
         String storeDir = getStoreDir();
 
@@ -201,5 +223,4 @@ public class JettyWarServer implements IServer {
         }
         return false;
     }
-
 }

@@ -45,7 +45,7 @@ article, aside, dialog, figure, footer, header, hgroup, nav, section { display:b
 .clearfix:after{ clear:both; overflow:hidden;}
 .clearfix{ zoom:1;}
 
-body{ color: #535353; font-size: 14px; font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;}
+body{ color: #535353; font-size: 14px; font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif !important;}
 a{ color:#535353; text-decoration:none;}
 a:hover{ text-decoration:none;}
 .ctr{ clear:both; display:block;}

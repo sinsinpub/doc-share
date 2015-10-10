@@ -1,13 +1,39 @@
+var libs = {
+    "version" : {
+        "requirejs" : "2.1.20",
+        "require-css" : "0.1.8",
+        "jquery" : "1.11.1",
+        "bootstrap" : "3.3.5"
+    },
+    "webjars" : function(id, name) {
+        return "webjars/" + id + "/" + libs.version[id] + "/" + name;
+    },
+    "js" : function(name) {
+        return "js/" + name;
+    },
+    "css" : function(name) {
+        return "css/" + name;
+    }
+}
+
 requirejs.config({
-    "baseUrl" : "js",
+    "baseUrl" : "/",
+    "paths" : {
+        "jquery" : libs.webjars("jquery", "jquery.min"),
+        "bootstrap" : libs.webjars("bootstrap", "js/bootstrap.min"),
+        "bootstrap-css" : libs.webjars("bootstrap", "css/bootstrap.min"),
+
+        "global-css" : libs.css("global"),
+        "index" : libs.js("index")
+    },
+    "map" : {
+        "*" : {
+            "css" : libs.webjars("require-css", "css")
+        }
+    },
     "shim" : {
-//        "jquery.bpopup.min" : [ "jquery.min" ],
-//        "jquery.dateFormat.min" : [ "jquery.min" ],
-//        "jquery-ui.min" : [ "jquery.min" ],
-//        "console" : [ "jquery.min" ],
-//        "header" : [ "jquery.min", "jquery.flexslider.min" ],
-//        "user" : [ "jquery.min", "console", "header" ],
-        "index" : [ "jquery.min" ]
+        "bootstrap" : [ "jquery", "css!bootstrap-css" ],
+        "index" : [ "css!global-css", "bootstrap" ]
     }
 });
 
