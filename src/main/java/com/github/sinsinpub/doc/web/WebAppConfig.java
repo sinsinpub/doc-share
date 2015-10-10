@@ -2,6 +2,7 @@ package com.github.sinsinpub.doc.web;
 
 import java.io.File;
 
+import com.github.sinsinpub.doc.web.interceptor.AccessLoggingInterceptor;
 import com.jfinal.config.Constants;
 import com.jfinal.config.Handlers;
 import com.jfinal.config.Interceptors;
@@ -55,7 +56,12 @@ public class WebAppConfig extends JFinalConfig {
     }
 
     public void configInterceptor(Interceptors me) {
+        AccessLoggingInterceptor ali = new AccessLoggingInterceptor();
+        ali.setEnableAccessLog(WebAppConfig.getProps().getBoolean("app.controller.accessLog", true));
+        ali.setEnableDbAccessLog(WebAppConfig.getProps().getBoolean("app.controller.dbAccessLog",
+                false));
 
+        me.addGlobalActionInterceptor(ali);
     }
 
     public void configHandler(Handlers me) {

@@ -7,6 +7,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
     <description>Simple WebApp for quickly sharing small files and document snippets.</description>
+    <url>https://github.com/sinsinpub/doc-share</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -30,8 +31,8 @@
             <version>2.0</version>
         </dependency>
         <dependency>
-            <artifactId>cglib-nodep</artifactId>
             <groupId>cglib</groupId>
+            <artifactId>cglib-nodep</artifactId>
             <version>3.1</version>
             <scope>runtime</scope>
         </dependency>
@@ -50,6 +51,11 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.6</version>
         </dependency>
 
         <dependency>
@@ -169,22 +175,19 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.6</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.6</version>
                 <configuration>
                     <warName>${project.artifactId}</warName>
                     <packagingExcludes>WEB-INF/web.xml</packagingExcludes>
                     <archive>
-                        <manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+                        <manifestFile>src/main/webapp/META-INF/MANIFEST.MF</manifestFile>
                         <manifest>
                             <mainClass>${main.class.name}</mainClass>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>WEB-INF/lib/</classpathPrefix>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                         </manifest>
                     </archive>
                 </configuration>
@@ -258,6 +261,20 @@
             </plugin>
 
         </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+            </testResource>
+        </testResources>
+
     </build>
 
 </project>

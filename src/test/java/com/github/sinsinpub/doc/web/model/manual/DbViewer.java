@@ -2,8 +2,11 @@ package com.github.sinsinpub.doc.web.model.manual;
 
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestName;
 
 import com.github.sinsinpub.doc.web.DataSourceInitializer;
 import com.github.sinsinpub.doc.web.model.AuditLog;
@@ -16,9 +19,19 @@ import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IDataSourceProvider;
 import com.jfinal.plugin.activerecord.Record;
 
+/**
+ * 不想借助其它工具查看数据表时的简易方法，只能在应用停止(没有锁住数据文件)时用.
+ */
 public class DbViewer {
 
     private static final Logger logger = Logger.getLogger(DbViewer.class);
+    @Rule
+    public TestName testName = new TestName();
+
+    @Before
+    public void before() {
+        logger.info(String.format("/**** TESTING METHOD [%s] */", testName.getMethodName()));
+    }
 
     @Test
     public void listAccessLog() {

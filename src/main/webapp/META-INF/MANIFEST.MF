@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Implementation-Vendor: Eclipse.org - Jetty
+Implementation-Version: 8.1.16.v20140903

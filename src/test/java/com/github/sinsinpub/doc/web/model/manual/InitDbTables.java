@@ -8,6 +8,9 @@ import com.jfinal.plugin.IPlugin;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.activerecord.IDataSourceProvider;
 
+/**
+ * JFinal作者表示没想过表结构事先不存在的场景:(
+ */
 public class InitDbTables {
 
     @Test

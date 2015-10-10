@@ -10,7 +10,7 @@ import com.jfinal.plugin.activerecord.tx.Tx;
 /**
  * 从基本DB操作抽象、扩展后的专门业务服务层.
  * <p>
- * 这里同时演示不止一个元子DB操作时的事务回滚，以及类似DDD设计风格的从属于Domain Model下的Repository和Service.
+ * 这里同时演示不止一个原子DB操作时的事务回滚，以及类似DDD设计风格的从属于Domain Model下的Repository和Service.
  * 
  * @author sin_sin
  * @version $Date: Oct 9, 2015 $

@@ -38,7 +38,9 @@ public class User extends Model<User> {
     public static final String LAST_SIGNIN_FROM = "last_signin_from";
     public static final String LAST_SIGNIN_AT = "last_signin_at";
 
+    /** 由Model提供的处理本值对象专用服务方法的静态快捷方式，适合调用线程安全的那些方法时用 */
     public static final User REPO = new User();
+    /** 简单静态实例，没有也无法利用到DI容器，而且要求所有方法实现必需线程安全 */
     public static final UserService SERVICE = Enhancer.enhance(new UserService());
 
     public User() {

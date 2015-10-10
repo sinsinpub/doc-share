@@ -23,7 +23,7 @@ public abstract class DatetimeFormatUtils {
      * String.format("%tF %tT %tz", ...
      * 
      * @param date
-     * @return yyyy-MM-dd HH:mm:ss ZZZZ
+     * @return yyyy-MM-dd HH:mm:ss Z
      */
     public static final String formatIso(Date date) {
         return String.format("%tF %tT %tz", date, date, date);

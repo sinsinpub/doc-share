@@ -58,7 +58,8 @@ public class UserController extends Controller {
             user = User.REPO.addDistinctUser(form);
             renderJson(user);
         }
-        AuditLog.REPO.addOpLog("New User", user.toJson(), getRequest().getRemoteAddr(), null, null);
+        AuditLog.REPO.addOpLog(AuditLog.LEVEL_INFO, getClass().getSimpleName(), "CreateUser",
+                user.toJson(), getRequest().getRemoteAddr(), null, null);
     }
 
     public void all() {
@@ -71,12 +72,12 @@ public class UserController extends Controller {
         try {
             User user = User.SERVICE.rename(sourceEmail, targetEmail, getRequest().getRemoteAddr());
             renderJson(user);
-            AuditLog.REPO.addOpLog("Rename User", user.toJson(), getRequest().getRemoteAddr(), null,
-                    null);
+            AuditLog.REPO.addOpLog(AuditLog.LEVEL_INFO, getClass().getSimpleName(), "RenameUser",
+                    user.toJson(), getRequest().getRemoteAddr(), null, null);
         } catch (RuntimeException e) {
             // 操作成功和操作失败时记的日志不一样，而且记日志操作不能在业务操作的数据事务当中
-            AuditLog.REPO.addOpLog("Rename User", e.toString(), getRequest().getRemoteAddr(), null,
-                    null);
+            AuditLog.REPO.addOpLog(AuditLog.LEVEL_ERROR, getClass().getSimpleName(), "RenameUser",
+                    getPara(), getRequest().getRemoteAddr(), null, e.toString());
             throw e;
         }
     }
