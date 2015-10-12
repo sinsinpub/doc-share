@@ -8,7 +8,6 @@ import com.jfinal.core.Controller;
 import com.jfinal.kit.JsonKit;
 import com.jfinal.kit.StrKit;
 import com.jfinal.log.Logger;
-import com.jfinal.render.RenderFactory;
 import com.jfinal.validate.Validator;
 
 /**
@@ -34,12 +33,11 @@ public abstract class JsonResponseValidator extends Validator {
             }
         }
         logger.info("Validator reports: " + JsonKit.toJson(errorMsgs));
-        if (isResponseStatusOk()) {
-            c.renderJson(errorMsgs);
-            return;
-        } else {
-            c.renderError(400, RenderFactory.me().getJsonRender(errorMsgs));
+        if (!isResponseStatusOk()) {
+            c.getResponse().setStatus(400);
         }
+        c.renderJson(errorMsgs);
+        return;
     }
 
     protected boolean isResponseStatusOk() {

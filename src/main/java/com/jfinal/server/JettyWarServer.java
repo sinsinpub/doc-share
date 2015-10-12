@@ -10,6 +10,7 @@ import java.security.ProtectionDomain;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.SessionManager;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
+import org.eclipse.jetty.server.session.AbstractSessionManager;
 import org.eclipse.jetty.server.session.HashSessionManager;
 import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.webapp.WebAppContext;
@@ -77,19 +78,22 @@ public class JettyWarServer implements IServer {
         SelectChannelConnector connector = new SelectChannelConnector();
         connector.setPort(port);
         server.addConnector(connector);
+        // 不要返回版本号
+        server.setSendServerVersion(false);
         webApp = new WebAppContext();
         // 在启动过程中允许抛出异常终止启动并退出 JVM
         webApp.setThrowUnavailableOnStartupException(true);
         webApp.setContextPath(context);
-        // webApp.setResourceBase(webAppDir);
+        webApp.setResourceBase(getWarLocation());
         webApp.setWar(getWarLocation());
+        // 不允许列文件目录
         webApp.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
-        webApp.setInitParameter("org.eclipse.jetty.servlet.Default.useFileMappedBuffer", "false");
-        // webApp.setInitParams(Collections.singletonMap(
-        // "org.mortbay.jetty.servlet.Default.useFileMappedBuffer", "false"));
+        // webApp.setInitParameter("org.eclipse.jetty.servlet.Default.useFileMappedBuffer", "false");
         // webApp.setAttribute(WebInfConfiguration.WEBINF_JAR_PATTERN, ".*\\.jar$");
         // 允许暴露jar中的META-INF/resources资源
         webApp.setAttribute(WebInfConfiguration.CONTAINER_JAR_PATTERN, ".*\\.jar$");
+        // 添加HttpOnly到cookies
+        ((AbstractSessionManager) webApp.getSessionHandler().getSessionManager()).setHttpOnly(true);
 
         // persistSession(webApp);
 

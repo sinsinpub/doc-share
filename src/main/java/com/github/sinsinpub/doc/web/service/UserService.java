@@ -50,4 +50,14 @@ public class UserService {
         return user;
     }
 
+    @Before(Tx.class)
+    public boolean delete(String email, Locale locale) {
+        User user = REPO.findByEmail(email);
+        if (user == null) {
+            throw new DataNotFoundException(MessageResources.format(locale,
+                    "service.exception.userNotFound", email));
+        }
+        return user.delete();
+    }
+
 }

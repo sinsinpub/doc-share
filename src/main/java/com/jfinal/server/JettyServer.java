@@ -24,6 +24,7 @@ import java.net.ServerSocket;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.SessionManager;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
+import org.eclipse.jetty.server.session.AbstractSessionManager;
 import org.eclipse.jetty.server.session.HashSessionManager;
 import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.webapp.WebAppContext;
@@ -106,6 +107,7 @@ class JettyServer implements IServer {
         // webApp.setAttribute(WebInfConfiguration.WEBINF_JAR_PATTERN, ".*\\.jar$");
         // 允许暴露jar中的META-INF/resources资源
         webApp.setAttribute(WebInfConfiguration.CONTAINER_JAR_PATTERN, ".*\\.jar$");
+        ((AbstractSessionManager) webApp.getSessionHandler().getSessionManager()).setHttpOnly(true);
 
         persistSession(webApp);
 

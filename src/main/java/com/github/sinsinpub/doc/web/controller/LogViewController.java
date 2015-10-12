@@ -5,8 +5,8 @@ import java.util.List;
 import com.github.sinsinpub.doc.web.RoutesDefines;
 import com.github.sinsinpub.doc.web.model.AuditLog;
 import com.jfinal.aop.Before;
-import com.jfinal.core.Controller;
 import com.jfinal.ext.interceptor.GET;
+import com.jfinal.ext.interceptor.NoUrlPara;
 import com.jfinal.plugin.activerecord.Page;
 
 /**
@@ -16,13 +16,15 @@ import com.jfinal.plugin.activerecord.Page;
  * @author sin_sin
  * @version $Date: Oct 8, 2015 $
  */
-@Before(JsonExceptionRenderer.class)
-public class LogViewController extends Controller {
+public class LogViewController extends JsonAwareController {
 
+    @Before(NoUrlPara.class)
     public void index() {
         renderJson("status", "ok");
     }
 
+    // 要限制只能用HTTP GET方法时：
+    // 当前默认只接受GET,HEAD,POST,OPTIONS。想用PUT,DELETE方法来做RESTful API要参考Restful拦截器
     @Before(GET.class)
     public void access() {
         if (getPara() == null) {

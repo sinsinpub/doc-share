@@ -3,6 +3,7 @@ package com.jfinal.server;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.github.sinsinpub.doc.ApplicationVersion;
 import com.jfinal.handler.Handler;
 import com.jfinal.kit.HandlerKit;
 
@@ -30,6 +31,10 @@ public class WarPathProtectionHandler extends Handler {
     @Override
     public void handle(String target, HttpServletRequest request, HttpServletResponse response,
             boolean[] isHandled) {
+        // 屏蔽了嵌入jetty响应的Server头，用我们自己应用的替换
+        if (null == response.getHeader("Server")) {
+            response.addHeader("Server", ApplicationVersion.getInstance().getApplicationName());
+        }
         if (isTargetStartsWithPrefix(target)) {
             // 直接返回404响应，以免被探测
             HandlerKit.renderError404(request, response, isHandled);

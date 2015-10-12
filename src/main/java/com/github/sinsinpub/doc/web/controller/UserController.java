@@ -2,13 +2,13 @@ package com.github.sinsinpub.doc.web.controller;
 
 import com.github.sinsinpub.doc.web.RoutesDefines;
 import com.github.sinsinpub.doc.web.exception.DataNotFoundException;
-import com.github.sinsinpub.doc.web.i18n.MessageResources;
 import com.github.sinsinpub.doc.web.model.AuditLog;
 import com.github.sinsinpub.doc.web.model.User;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
+import com.jfinal.ext.interceptor.NoUrlPara;
 import com.jfinal.kit.StrKit;
 
 /**
@@ -18,9 +18,9 @@ import com.jfinal.kit.StrKit;
  * @author sin_sin
  * @version $Date: Oct 8, 2015 $
  */
-@Before(JsonExceptionRenderer.class)
-public class UserController extends Controller {
+public class UserController extends JsonAwareController {
 
+    @Before(NoUrlPara.class)
     public void index() {
         renderJson("status", "ok");
     }
@@ -36,8 +36,7 @@ public class UserController extends Controller {
             user = User.REPO.findByEmail(cond);
         }
         if (user == null) {
-            throw new DataNotFoundException(MessageResources.format(getRequest().getLocale(),
-                    "service.exception.userNotFound", cond));
+            throw new DataNotFoundException(formatMessage("service.exception.userNotFound", cond));
         } else {
             renderJson(user);
         }
@@ -58,10 +57,11 @@ public class UserController extends Controller {
             form.set(User.PW_HASH, "233");
             form.set(User.PW_SALT, "874");
             user = User.REPO.addDistinctUser(form);
+            statusCreated();
             renderJson(user);
         }
         AuditLog.REPO.addOpLog(AuditLog.LEVEL_INFO, getClass().getSimpleName(), "CreateUser",
-                user.toJson(), getRequest().getRemoteAddr(), null, null);
+                user.toJson(), getRemoteAddr(), null, null);
     }
 
     public void all() {
@@ -72,15 +72,30 @@ public class UserController extends Controller {
         String sourceEmail = getPara("src", "admin1");
         String targetEmail = getPara("tar", "admin2");
         try {
-            User user = User.SERVICE.rename(sourceEmail, targetEmail, getRequest().getRemoteAddr(),
-                    getRequest().getLocale());
-            renderJson(user);
+            User user = User.SERVICE.rename(sourceEmail, targetEmail, getRemoteAddr(), getLocale());
             AuditLog.REPO.addOpLog(AuditLog.LEVEL_INFO, getClass().getSimpleName(), "RenameUser",
-                    user.toJson(), getRequest().getRemoteAddr(), null, null);
+                    user.toJson(), getRemoteAddr(), null, null);
+            renderJsonEmpty();
+            statusAccepted();
         } catch (RuntimeException e) {
             // 操作成功和操作失败时记的日志不一样，而且记日志操作不能在业务操作的数据事务当中
             AuditLog.REPO.addOpLog(AuditLog.LEVEL_ERROR, getClass().getSimpleName(), "RenameUser",
-                    getPara(), getRequest().getRemoteAddr(), null, e.toString());
+                    getPara(), getRemoteAddr(), null, e.toString());
+            throw e;
+        }
+    }
+
+    public void delete() {
+        String email = getPara(0);
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(email), "Required parameter missing");
+        try {
+            User.SERVICE.delete(email, getLocale());
+            AuditLog.REPO.addOpLog(AuditLog.LEVEL_INFO, getClass().getSimpleName(), "DeleteUser",
+                    email, getRemoteAddr(), null, null);
+            renderJsonEmpty();
+        } catch (RuntimeException e) {
+            AuditLog.REPO.addOpLog(AuditLog.LEVEL_ERROR, getClass().getSimpleName(), "DeleteUser",
+                    email, getRemoteAddr(), null, e.toString());
             throw e;
         }
     }

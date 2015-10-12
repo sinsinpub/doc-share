@@ -51,7 +51,7 @@ public abstract class DataSourceInitializer {
         arp.setDevMode(WebAppConfig.getProps().getBoolean("jfinal.devMode", Boolean.FALSE));
         arp.setShowSql(WebAppConfig.getProps().getBoolean("jfinal.devMode", Boolean.FALSE));
         // 统一让数据库字段都不区分大小写，不然操作值对象属性时都得被迫用全大写
-        arp.setContainerFactory(new CaseInsensitiveContainerFactory());
+        arp.setContainerFactory(new CaseInsensitiveContainerFactory(true));
         // 默认是MySQL方言，我们用H2/HSQLDB时要换ANSI标准
         arp.setDialect(new AnsiSqlDialect());
         return arp;
