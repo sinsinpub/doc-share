@@ -84,7 +84,7 @@ public class JettyWarServer implements IServer {
         // 在启动过程中允许抛出异常终止启动并退出 JVM
         webApp.setThrowUnavailableOnStartupException(true);
         webApp.setContextPath(context);
-        webApp.setResourceBase(getWarLocation());
+        // webApp.setResourceBase(getWarLocation());
         webApp.setWar(getWarLocation());
         // 不允许列文件目录
         webApp.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
