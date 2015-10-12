@@ -1,8 +1,10 @@
 package com.github.sinsinpub.doc.web.service;
 
 import java.sql.Timestamp;
+import java.util.Locale;
 
 import com.github.sinsinpub.doc.web.exception.DataNotFoundException;
+import com.github.sinsinpub.doc.web.i18n.MessageResources;
 import com.github.sinsinpub.doc.web.model.User;
 import com.jfinal.aop.Before;
 import com.jfinal.plugin.activerecord.tx.Tx;
@@ -28,13 +30,15 @@ public class UserService {
      * @param oldEmail
      * @param newEmail
      * @param remoteAddr
+     * @param locale
      * @return Updated User entity
      */
     @Before(Tx.class)
-    public User rename(String oldEmail, String newEmail, String remoteAddr) {
+    public User rename(String oldEmail, String newEmail, String remoteAddr, Locale locale) {
         User user = REPO.findByEmail(oldEmail);
         if (user == null) {
-            throw new DataNotFoundException("User not found for " + oldEmail);
+            throw new DataNotFoundException(MessageResources.format(locale,
+                    "service.exception.userNotFound", oldEmail));
         }
         user.set(User.LAST_SIGNIN_AT, new Timestamp(System.currentTimeMillis()));
         user.set(User.LAST_SIGNIN_FROM, remoteAddr);

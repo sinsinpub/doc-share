@@ -1,11 +1,13 @@
 package com.github.sinsinpub.doc.utils.manual;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.junit.Before;
@@ -17,6 +19,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.github.sinsinpub.doc.utils.DatetimeFormatUtils;
+import com.github.sinsinpub.doc.web.i18n.MessageResources;
 import com.jfinal.kit.JsonKit;
 import com.jfinal.kit.Ret;
 import com.jfinal.log.Logger;
@@ -40,6 +43,16 @@ public class DevUtilsTest {
                 + DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.format(d));
         logger.info("So our ISO is not actual: "
                 + DateFormatUtils.format(d, "yyyy-MM-dd HH:mm:ss Z"));
+    }
+
+    @Test
+    public void testMessageResources() {
+        String str = "zh-CN variant";
+        logger.info("String:    " + str);
+        logger.info("Split:     " + Arrays.toString(StringUtils.splitPreserveAllTokens(str, "-_ ")));
+        logger.info("Locale:    " + MessageResources.parseLocaleString(str));
+        logger.info("ResBundle: "
+                + MessageResources.format(str, "service.exception.userNotFound", new Date()));
     }
 
     @Test

@@ -16,6 +16,7 @@ import com.jfinal.plugin.IPlugin;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.activerecord.IDataSourceProvider;
 import com.jfinal.render.ViewType;
+import com.jfinal.server.WarPathProtectionHandler;
 
 /**
  * Customer configuration for JFinal filter.
@@ -65,7 +66,7 @@ public class WebAppConfig extends JFinalConfig {
     }
 
     public void configHandler(Handlers me) {
-
+        me.add(new WarPathProtectionHandler());
     }
 
     @Override

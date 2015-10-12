@@ -309,6 +309,13 @@
                 <directory>src/test/resources</directory>
                 <filtering>true</filtering>
             </testResource>
+            <testResource>
+                <directory>src/main/webapp</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>WEB-INF/web*.xml</include>
+                </includes>
+            </testResource>
         </testResources>
 
     </build>

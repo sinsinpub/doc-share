@@ -2,6 +2,7 @@ package com.github.sinsinpub.doc.web.controller;
 
 import com.github.sinsinpub.doc.web.RoutesDefines;
 import com.github.sinsinpub.doc.web.exception.DataNotFoundException;
+import com.github.sinsinpub.doc.web.i18n.MessageResources;
 import com.github.sinsinpub.doc.web.model.AuditLog;
 import com.github.sinsinpub.doc.web.model.User;
 import com.google.common.base.Preconditions;
@@ -35,7 +36,8 @@ public class UserController extends Controller {
             user = User.REPO.findByEmail(cond);
         }
         if (user == null) {
-            throw new DataNotFoundException("User not found for " + cond);
+            throw new DataNotFoundException(MessageResources.format(getRequest().getLocale(),
+                    "service.exception.userNotFound", cond));
         } else {
             renderJson(user);
         }
@@ -70,7 +72,8 @@ public class UserController extends Controller {
         String sourceEmail = getPara("src", "admin1");
         String targetEmail = getPara("tar", "admin2");
         try {
-            User user = User.SERVICE.rename(sourceEmail, targetEmail, getRequest().getRemoteAddr());
+            User user = User.SERVICE.rename(sourceEmail, targetEmail, getRequest().getRemoteAddr(),
+                    getRequest().getLocale());
             renderJson(user);
             AuditLog.REPO.addOpLog(AuditLog.LEVEL_INFO, getClass().getSimpleName(), "RenameUser",
                     user.toJson(), getRequest().getRemoteAddr(), null, null);
