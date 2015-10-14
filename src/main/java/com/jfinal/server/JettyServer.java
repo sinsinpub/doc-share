@@ -51,7 +51,7 @@ class JettyServer implements IServer {
     JettyServer(String webAppDir, int port, String context, int scanIntervalSeconds) {
         if (webAppDir == null)
             throw new IllegalStateException("Invalid webAppDir of web server: " + webAppDir);
-        if (port < 0 || port > 65536)
+        if (port < 0 || port > 65535)
             throw new IllegalArgumentException("Invalid port of web server: " + port);
         if (StrKit.isBlank(context))
             throw new IllegalStateException("Invalid context of web server: " + context);
@@ -148,7 +148,7 @@ class JettyServer implements IServer {
         return;
     }
 
-    private void changeClassLoader(WebAppContext webApp) {
+    static void changeClassLoader(WebAppContext webApp) {
         try {
             String classPath = getClassPath();
             JFinalClassLoader wacl = new JFinalClassLoader(webApp, classPath);
@@ -158,25 +158,25 @@ class JettyServer implements IServer {
         }
     }
 
-    private String getClassPath() {
+    static String getClassPath() {
         return System.getProperty("java.class.path");
     }
 
-    private void deleteSessionData() {
+    void deleteSessionData() {
         try {
             FileKit.delete(new File(getStoreDir()));
         } catch (Exception e) {
         }
     }
 
-    private String getStoreDir() {
+    String getStoreDir() {
         String storeDir = PathKit.getWebRootPath() + "/../../session_data" + context;
         if ("\\".equals(File.separator))
             storeDir = storeDir.replaceAll("/", "\\\\");
         return storeDir;
     }
 
-    private void persistSession(WebAppContext webApp) {
+    void persistSession(WebAppContext webApp) {
         String storeDir = getStoreDir();
 
         try {
@@ -196,7 +196,7 @@ class JettyServer implements IServer {
         }
     }
 
-    private static boolean available(int port) {
+    static boolean available(int port) {
         if (port <= 0) {
             throw new IllegalArgumentException("Invalid start port: " + port);
         }
@@ -225,4 +225,5 @@ class JettyServer implements IServer {
         }
         return false;
     }
+
 }

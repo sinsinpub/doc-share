@@ -115,12 +115,14 @@
             <version>${jfinal.jetty.version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
+        <!--
+            <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
             <version>${jfinal.jetty.version}</version>
             <scope>provided</scope>
-        </dependency>
+            </dependency>
+        -->
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-jsp</artifactId>
@@ -247,6 +249,7 @@
                                 <copy
                                     todir="${project.build.directory}/${project.artifactId}-${project.version}/com/jfinal/server/">
                                     <fileset dir="${project.build.directory}/classes/com/jfinal/server/">
+                                        <include name="JettyServer.class" />
                                         <include name="JettyWarServer.class" />
                                     </fileset>
                                 </copy>
@@ -273,9 +276,7 @@
                             <includeGroupIds>org.eclipse.jetty,javax.servlet,com.jfinal</includeGroupIds>
                             <excludeArtifactIds>jsp-api,jstl</excludeArtifactIds>
                             <excludes>META-INF/ECLIPSEF.*,readme.txt,about.html,jetty-dir.css,plugin.properties</excludes>
-                            <outputDirectory>
-                                ${project.build.directory}/${project.artifactId}-${project.version}
-                            </outputDirectory>
+                            <outputDirectory>${project.build.directory}/${project.artifactId}-${project.version}</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
@@ -313,7 +314,7 @@
                 <directory>src/main/webapp</directory>
                 <filtering>false</filtering>
                 <includes>
-                    <include>WEB-INF/web*.xml</include>
+                    <include>/WEB-INF/web.xml</include>
                 </includes>
             </testResource>
         </testResources>

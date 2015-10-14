@@ -24,7 +24,8 @@ public class LogViewController extends JsonAwareController {
     }
 
     // 要限制只能用HTTP GET方法时：
-    // 当前默认只接受GET,HEAD,POST,OPTIONS。想用PUT,DELETE方法来做RESTful API要参考Restful拦截器
+    // Jetty默认OPTIONS显示接受GET,HEAD,POST,OPTIONS，其实PUT、DELETE这些方法可以用。
+    // 想用它们来做RESTful API可参考Restful拦截器，或者直接写它们对应的方法限制拦截器即可。
     @Before(GET.class)
     public void access() {
         if (getPara() == null) {

@@ -24,6 +24,13 @@ public class HomeController extends Controller {
     }
 
     /**
+     * 测试下JSP渲染.
+     */
+    public void test() {
+        renderJsp("jsp/test.jsp");
+    }
+
+    /**
      * 显示服务端系统机密信息233
      */
     public void sysinfo() {

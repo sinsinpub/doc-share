@@ -1,24 +1,17 @@
 package com.jfinal.server;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.DatagramSocket;
-import java.net.ServerSocket;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.security.ProtectionDomain;
+import java.util.Set;
 
+import org.apache.jasper.runtime.TldScanner;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.SessionManager;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.server.session.AbstractSessionManager;
-import org.eclipse.jetty.server.session.HashSessionManager;
-import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.webapp.WebInfConfiguration;
 
 import com.jfinal.core.Const;
-import com.jfinal.kit.FileKit;
-import com.jfinal.kit.PathKit;
 import com.jfinal.kit.StrKit;
 
 /**
@@ -36,7 +29,7 @@ public class JettyWarServer implements IServer {
     private WebAppContext webApp;
 
     public JettyWarServer(int port, String context) {
-        if (port < 0 || port > 65536)
+        if (port < 0 || port > 65535)
             throw new IllegalArgumentException("Invalid port of web server: " + port);
         if (StrKit.isBlank(context))
             throw new IllegalStateException("Invalid context of web server: " + context);
@@ -68,37 +61,25 @@ public class JettyWarServer implements IServer {
     }
 
     private void doStart() {
-        if (!available(port))
+        if (!JettyServer.available(port))
             throw new IllegalStateException("port: " + port + " already in use!");
 
-        // deleteSessionData();
-
         System.out.println("Starting JFinal " + Const.JFINAL_VERSION);
-        server = new Server();
-        SelectChannelConnector connector = new SelectChannelConnector();
-        connector.setPort(port);
-        server.addConnector(connector);
+        server = new Server(port);
+        webApp = new WebAppContext(getWarLocation(), context);
         // 不要返回版本号
         server.setSendServerVersion(false);
-        webApp = new WebAppContext();
+        server.setHandler(webApp);
         // 在启动过程中允许抛出异常终止启动并退出 JVM
         webApp.setThrowUnavailableOnStartupException(true);
-        webApp.setContextPath(context);
-        // webApp.setResourceBase(getWarLocation());
-        webApp.setWar(getWarLocation());
         // 不允许列文件目录
         webApp.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
-        // webApp.setInitParameter("org.eclipse.jetty.servlet.Default.useFileMappedBuffer", "false");
-        // webApp.setAttribute(WebInfConfiguration.WEBINF_JAR_PATTERN, ".*\\.jar$");
         // 允许暴露jar中的META-INF/resources资源
         webApp.setAttribute(WebInfConfiguration.CONTAINER_JAR_PATTERN, ".*\\.jar$");
         // 添加HttpOnly到cookies
         ((AbstractSessionManager) webApp.getSessionHandler().getSessionManager()).setHttpOnly(true);
-
-        // persistSession(webApp);
-
-        server.setHandler(webApp);
-        changeClassLoader(webApp);
+        JettyServer.changeClassLoader(webApp);
+        clearTldSystemUri();
 
         try {
             System.out.println("Starting web server on port: " + port);
@@ -126,84 +107,15 @@ public class JettyWarServer implements IServer {
         return location.toExternalForm();
     }
 
-    private void changeClassLoader(WebAppContext webApp) {
+    @SuppressWarnings("unchecked")
+    static void clearTldSystemUri() {
         try {
-            String classPath = getClassPath();
-            JFinalClassLoader wacl = new JFinalClassLoader(webApp, classPath);
-            wacl.addClassPath(classPath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private String getClassPath() {
-        return System.getProperty("java.class.path");
-    }
-
-    @SuppressWarnings("unused")
-    private void deleteSessionData() {
-        try {
-            FileKit.delete(new File(getStoreDir()));
+            Field f = TldScanner.class.getDeclaredField("systemUris");
+            f.setAccessible(true);
+            ((Set<String>) f.get(null)).clear();
         } catch (Exception e) {
+            // ignored
         }
-    }
-
-    private String getStoreDir() {
-        String storeDir = PathKit.getWebRootPath() + "/../../session_data" + context;
-        if ("\\".equals(File.separator))
-            storeDir = storeDir.replaceAll("/", "\\\\");
-        return storeDir;
-    }
-
-    @SuppressWarnings("unused")
-    private void persistSession(WebAppContext webApp) {
-        String storeDir = getStoreDir();
-
-        try {
-            SessionManager sm = webApp.getSessionHandler().getSessionManager();
-            if (sm instanceof HashSessionManager) {
-                ((HashSessionManager) sm).setStoreDirectory(new File(storeDir));
-                return;
-            }
-
-            HashSessionManager hsm = new HashSessionManager();
-            hsm.setStoreDirectory(new File(storeDir));
-            SessionHandler sh = new SessionHandler();
-            sh.setSessionManager(hsm);
-            webApp.setSessionHandler(sh);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static boolean available(int port) {
-        if (port <= 0) {
-            throw new IllegalArgumentException("Invalid start port: " + port);
-        }
-
-        ServerSocket ss = null;
-        DatagramSocket ds = null;
-        try {
-            ss = new ServerSocket(port);
-            ss.setReuseAddress(true);
-            ds = new DatagramSocket(port);
-            ds.setReuseAddress(true);
-            return true;
-        } catch (IOException e) {
-        } finally {
-            if (ds != null) {
-                ds.close();
-            }
-
-            if (ss != null) {
-                try {
-                    ss.close();
-                } catch (IOException e) {
-                    // should not be thrown, just detect port available.
-                }
-            }
-        }
-        return false;
     }
 
 }
