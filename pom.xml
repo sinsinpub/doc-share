@@ -15,8 +15,10 @@
         <java.source.version>${java.version}</java.source.version>
         <java.target.version>${java.version}</java.target.version>
         <jfinal.jetty.version>8.1.16.v20140903</jfinal.jetty.version>
-        <jetty.version>9.2.10.v20150310</jetty.version>
-        <jetty.port>80</jetty.port>
+        <!-- JRE7 and groupId 'org.mortbay.jetty' to 'org.eclipse.jetty' needed -->
+        <jetty9.version>9.2.10.v20150310</jetty9.version>
+        <jetty.version>${jfinal.jetty.version}</jetty.version>
+        <jetty.port>8080</jetty.port>
         <jetty.context.path>/</jetty.context.path>
         <main.class.name>WarEmbeddedBootstrap</main.class.name>
     </properties>
@@ -115,14 +117,6 @@
             <version>${jfinal.jetty.version}</version>
             <scope>provided</scope>
         </dependency>
-        <!--
-            <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-server</artifactId>
-            <version>${jfinal.jetty.version}</version>
-            <scope>provided</scope>
-            </dependency>
-        -->
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-jsp</artifactId>
@@ -232,37 +226,6 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.7</version>
-                <executions>
-                    <execution>
-                        <id>main-class-placement</id>
-                        <phase>prepare-package</phase>
-                        <configuration>
-                            <tasks>
-                                <move
-                                    todir="${project.build.directory}/${project.artifactId}-${project.version}/">
-                                    <fileset dir="${project.build.directory}/classes/">
-                                        <include name="${main.class.name}.class" />
-                                    </fileset>
-                                </move>
-                                <copy
-                                    todir="${project.build.directory}/${project.artifactId}-${project.version}/com/jfinal/server/">
-                                    <fileset dir="${project.build.directory}/classes/com/jfinal/server/">
-                                        <include name="JettyServer.class" />
-                                        <include name="JettyWarServer.class" />
-                                    </fileset>
-                                </copy>
-                            </tasks>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>2.8</version>
                 <executions>
@@ -281,9 +244,40 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <id>main-class-placement</id>
+                        <phase>prepare-package</phase>
+                        <configuration>
+                            <tasks>
+                                <move
+                                    todir="${project.build.directory}/${project.artifactId}-${project.version}/">
+                                    <fileset dir="${project.build.directory}/classes/">
+                                        <include name="${main.class.name}.class" />
+                                    </fileset>
+                                </move>
+                                <copy
+                                    todir="${project.build.directory}/${project.artifactId}-${project.version}/com/jfinal/server/">
+                                    <fileset dir="${project.build.directory}/classes/com/jfinal/server/">
+                                        <include name="JettyServer*" />
+                                        <include name="JettyWarServer*" />
+                                    </fileset>
+                                </copy>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
             <plugin>
-                <groupId>org.eclipse.jetty</groupId>
+                <groupId>org.mortbay.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>${jetty.version}</version>
                 <configuration>
