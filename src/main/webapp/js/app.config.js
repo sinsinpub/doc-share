@@ -14,26 +14,28 @@ var libs = {
     "css" : function(name) {
         return "css/" + name;
     }
-}
+};
 
 requirejs.config({
     "baseUrl" : "/",
+    "map" : {
+        "*" : {
+            "css" : libs.webjars("require-css", "css")
+        }
+    },
     "paths" : {
         "jquery" : libs.webjars("jquery", "jquery.min"),
         "bootstrap" : libs.webjars("bootstrap", "js/bootstrap.min"),
         "bootstrap-css" : libs.webjars("bootstrap", "css/bootstrap.min"),
 
         "global-css" : libs.css("global"),
+        "header" : libs.js("header"),
         "index" : libs.js("index")
-    },
-    "map" : {
-        "*" : {
-            "css" : libs.webjars("require-css", "css")
-        }
     },
     "shim" : {
         "bootstrap" : [ "jquery", "css!bootstrap-css" ],
-        "index" : [ "css!global-css", "bootstrap" ]
+        "header" : [ "jquery" ],
+        "index" : [ "css!global-css", "bootstrap", "header" ]
     }
 });
 
@@ -45,7 +47,7 @@ var detectMainRequireModuleName = function() {
         moduleName = scriptElement.getAttribute("module") || moduleName;
     }
     return moduleName;
-}
+};
 
 var mainModuleName = detectMainRequireModuleName();
 if (!!mainModuleName) {

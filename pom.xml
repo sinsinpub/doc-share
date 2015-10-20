@@ -23,9 +23,6 @@
         <main.class.name>WarEmbeddedBootstrap</main.class.name>
     </properties>
 
-    <profiles>
-    </profiles>
-
     <dependencies>
         <dependency>
             <groupId>com.jfinal</groupId>
@@ -275,7 +272,33 @@
                     </execution>
                 </executions>
             </plugin>
-
+            <plugin>
+                <groupId>com.samaxes.maven</groupId>
+                <artifactId>minify-maven-plugin</artifactId>
+                <version>1.7.4</version>
+                <executions>
+                    <execution>
+                        <id>default-minify</id>
+                        <configuration>
+                            <charset>${project.build.sourceEncoding}</charset>
+                            <skipMerge>true</skipMerge>
+                            <nosuffix>true</nosuffix>
+                            <verbose>true</verbose>
+                            <cssSourceIncludes>
+                                <cssSourceInclude>**</cssSourceInclude>
+                            </cssSourceIncludes>
+                            <jsEngine>CLOSURE</jsEngine>
+                            <jsSourceIncludes>
+                                <jsSourceInclude>**</jsSourceInclude>
+                            </jsSourceIncludes>
+                        </configuration>
+                        <goals>
+                            <goal>minify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+ 
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
