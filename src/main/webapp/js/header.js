@@ -1,9 +1,21 @@
-var loadHeader = function(base) {
+$.ajaxSetup({
+    cache : true
+});
 
-    $('#header').load((base || '.') + '/header.html', 'header');
+var loadHeader = function(base) {
+    if ($('#header').children().length == 0) {
+        $('#header').load((base || '.') + '/header.html #header_inner');
+    }
+};
+
+var loadFooter = function(base) {
+    if ($('#footer').children().length == 0) {
+        $('#footer').load((base || '.') + '/footer.html #footer_inner');
+    }
 };
 
 $(function() {
-    loadHeader();
+    loadHeader(window.contextPath);
+    loadFooter(window.contextPath);
 });
 

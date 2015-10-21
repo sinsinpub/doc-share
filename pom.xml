@@ -227,7 +227,7 @@
                 <version>2.8</version>
                 <executions>
                     <execution>
-                        <id>jetty-classpath</id>
+                        <id>unpack-jetty-classes</id>
                         <phase>prepare-package</phase>
                         <goals>
                             <goal>unpack-dependencies</goal>
@@ -247,7 +247,7 @@
                 <version>1.7</version>
                 <executions>
                     <execution>
-                        <id>main-class-placement</id>
+                        <id>main-class-prepare</id>
                         <phase>prepare-package</phase>
                         <configuration>
                             <tasks>
@@ -276,27 +276,44 @@
                 <groupId>com.samaxes.maven</groupId>
                 <artifactId>minify-maven-plugin</artifactId>
                 <version>1.7.4</version>
-                <executions>
-                    <execution>
-                        <id>default-minify</id>
-                        <configuration>
-                            <charset>${project.build.sourceEncoding}</charset>
-                            <skipMerge>true</skipMerge>
-                            <nosuffix>true</nosuffix>
-                            <verbose>true</verbose>
-                            <cssSourceIncludes>
-                                <cssSourceInclude>**</cssSourceInclude>
-                            </cssSourceIncludes>
+                <configuration>
+                    <charset>${project.build.sourceEncoding}</charset>
+                    <skipMerge>true</skipMerge>
+                    <nosuffix>true</nosuffix>
+                    <webappTargetDir>${project.build.directory}/minify</webappTargetDir>
+                    <cssSourceDir>css</cssSourceDir>
+                    <cssSourceIncludes>
+                        <cssSourceInclude>**</cssSourceInclude>
+                    </cssSourceIncludes>
+                    <cssSourceExcludes>
+                                <cssSourceExclude>images/**</cssSourceExclude>
+                                <cssSourceExclude>**/*.min.css</cssSourceExclude>
+                            </cssSourceExcludes>
                             <jsEngine>CLOSURE</jsEngine>
                             <jsSourceIncludes>
                                 <jsSourceInclude>**</jsSourceInclude>
                             </jsSourceIncludes>
-                        </configuration>
-                        <goals>
-                            <goal>minify</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                    <jsSourceExcludes>
+                        <jsSourceExclude>**/*.min.js</jsSourceExclude>
+                    </jsSourceExcludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.tunyk.mvn.plugins.htmlcompressor</groupId>
+                <artifactId>htmlcompressor-maven-plugin</artifactId>
+                <version>1.3</version>
+                <configuration>
+                    <goalPrefix>htmlcompressor</goalPrefix>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <srcFolder>src/main/webapp</srcFolder>
+                    <fileExt>
+                        <fileExt>html</fileExt>
+                        <fileExt>jsp</fileExt>
+                    </fileExt>
+                    <javascriptHtmlSprite>false</javascriptHtmlSprite>
+                    <compressCss>true</compressCss>
+                    <compressJavaScript>true</compressJavaScript>
+                </configuration>
             </plugin>
  
             <plugin>
@@ -337,5 +354,60 @@
         </testResources>
 
     </build>
+
+    <profiles>
+        <profile>
+            <id>minify-assets</id>
+            <activation>
+                <property>
+                    <name>!skip.minify</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.samaxes.maven</groupId>
+                        <artifactId>minify-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>default-minify</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>minify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.tunyk.mvn.plugins.htmlcompressor</groupId>
+                        <artifactId>htmlcompressor-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>default-htmlCompress</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>html</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                     </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <configuration>
+                            <webResources>
+                                <resource>
+                                    <directory>${project.build.directory}/minify</directory>
+                                </resource>
+                                <resource>
+                                    <directory>${project.build.directory}/htmlcompressor/html</directory>
+                                </resource>
+                            </webResources>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>         
+        </profile>
+    </profiles>
 
 </project>
