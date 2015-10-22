@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+
+    <!-- Load properties from file optionally -->
+    <define name="confPropExists" class="ch.qos.logback.core.property.FileExistsPropertyDefiner">
+        <path>conf/log.properties</path>
+    </define>
+    <if condition='property("confPropExists").equals("true")'>
+        <then>
+            <property file="conf/log.properties" />
+        </then>
+    </if>
+
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!-- Save output columns for console width -->
+            <pattern>[%4.4p] %d{yyyy-MM-dd HH:mm:ss.SSS}: %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FileAll" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <!-- More details but fixed width prefix for file logging -->
+            <pattern>%5.5p|%20.20c{0}|%-17.17t|%d{ISO8601}| %m%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <file>${file.output.location:-logs}/all.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${file.output.location:-logs}/all.%i.log</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>${roll.window.max:-3}</maxIndex>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>${roll.window.size:-10MB}</maxFileSize>
+        </triggeringPolicy>
+    </appender>
+
+    <appender name="FileError" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <!-- Multi-line source code level details on exceptions -->
+            <pattern>%.5p|%20.20c{0}|%-17t|%d{ISO8601}| %m%n\tby %C.%M\(%F:%L\)%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <file>${file.output.location:-logs}/error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${file.output.location:-logs}/error.log.%d{yyyy-MM-dd}.gz
+            </fileNamePattern>
+            <maxHistory>${error.max.history:-15}</maxHistory>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+    </appender>
+
+    <logger name="${app.logger.package:-com.github}" level="${app.logger.level:-INFO}" />
+
+    <root level="${root.logger.level:-WARN}">
+        <appender-ref ref="Console" />
+        <appender-ref ref="FileAll" />
+        <appender-ref ref="FileError" />
+    </root>
+
+    <jmxConfigurator />
+
+</configuration>

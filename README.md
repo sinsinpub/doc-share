@@ -26,13 +26,13 @@ mvn test -Dtest=com.github.sinsinpub.doc.web.model.manual.InitDbTables
 * 启动内嵌的Jetty服务
 
 ```
-java -jar target\doc-share.war [port] [context]
+java -jar target\doc-share.war {port} {context}
 ```
 
 * 如果没有加port等参数并且顺利启动，浏览器打开`http://localhost/`即可Enjoy!
 * 由于默认的port 80可能没有权限监听，如果提示被占用则换一个大于1024的端口号(如8080)即可。
 
-* 要以开发调试状态启动Jetty只需，默认port就是8080
+* 要以开发调试状态启动Jetty只需(port默认就是8080)
 
 ```
 mvn jetty:run
@@ -42,6 +42,5 @@ mvn jetty:run
 
 ```
 mkdir conf
-cp src/main/resources/META-INF/application.properties conf/runtime.properties
+cp src/main/resources/app-default.properties conf/runtime.properties
 ```
-

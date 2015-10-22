@@ -27,7 +27,7 @@ import com.jfinal.server.WarPathProtectionHandler;
 public class WebAppConfig extends JFinalConfig {
 
     private static final Logger LOG = Logger.getLogger(WebAppConfig.class);
-    private static Prop appCfg = PropKit.use("META-INF/application.properties");
+    private static Prop appCfg = PropKit.use("app-default.properties");
 
     public static Prop getProps() {
         return appCfg;
