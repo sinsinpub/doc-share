@@ -38,7 +38,7 @@ public final class MBeanFactory {
 	private MBeanFactory() {}
 
 	/**
-	 * Creates a DynamicMBean from an object annotated with {@link ManagedBean} exposing all methods and attributes
+	 * Creates a DynamicMBean from an object annotated with {@code ManagedBean} exposing all methods and attributes
 	 * annotated with {@link ManagedOperation} and {@link ManagedAttribute} respectively.
 	 * 
 	 * @param object the object from which we are creating the DynamicMBean.

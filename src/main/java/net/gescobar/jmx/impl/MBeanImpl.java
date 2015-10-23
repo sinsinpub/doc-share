@@ -370,7 +370,7 @@ public class MBeanImpl implements DynamicMBean {
      * Helper method. Finds a class from its class name. 
      * 
      * @param className
-     * @return
+     * @return Class
      * @throws ClassNotFoundException
      */
     private Class<?> findClass(String className) throws ClassNotFoundException {

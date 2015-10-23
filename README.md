@@ -53,8 +53,18 @@ cp src/main/resources/log.properties conf/
 
 ## Developer Guide
 
-TBD
+* 了解项目构成和包作用：其实看源码最直接，也可以生成javadoc来阅读：
+
+```
+mvn javadoc:jar
+```
+
+* 添加更多功能、依赖：直接改pom和相应的包就行了，这项目现在就是个骨架和示例而已。
+
+* 前端想要写更少、做更多：直接把coffeescript、lesscss之类的引进来即可。one-page类的MVVM框架只要修改后端与之配合也行。
+
+* 后端想要使用正规的数据库：引入相应的驱动、把JDBC相关的配置改了即可。
 
 ## License
 
-APL 2.0
+ASL 2.0
