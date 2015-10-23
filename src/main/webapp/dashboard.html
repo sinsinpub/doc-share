@@ -6,54 +6,47 @@
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 <link rel="shortcut icon" href="favicon.ico" />
-<script src="/webjars/requirejs/2.1.20/require.min.js" type="text/javascript" defer
-	async="true" data-main="js/app.config" module="index"></script>
+<script src="/webjars/requirejs/2.1.20/require.min.js" type="text/javascript" defer async="true"
+    data-main="js/app.config" module="index"></script>
 </head>
 
 <body>
-	<header>
-		<div id="header">
+<header>
+<div id="header"></div>
+</header>
+
+<section>
+<div id="body">
+	<div class="upload-menu">
+		<div class="text-file"><a href="#upload-text">Upload/write a plain-text</a></div>
+		<div class="image-file"><a href="#upoad-image">Upload an images</a></div>
+		<div class="any-file"><a href="#upload-generic">Upload any file</a></div>
+	</div>
+	<div class="upload-panel init-hide">
+		<div class="text-editor">
+			Text editor
+			<input class="file-name" />
+			<textarea class="editor"></textarea>
 		</div>
-	</header>
-
-	<section>
-		<div id="body">
-		<div class="upload-menu">
-<div class="text-file">
-<a href="#upload-text">Upload/write a plain-text</a>
-</div>
-<div class="image-file">
-<a href="#upoad-image">Upload an images</a>
-</div>
-<div class="any-file">
-<a href="#upload-generic">Upload any file</a>
-</div>
+		<div class="pic-picker">
+			Picture Picker
 		</div>
-                <div class="upload-panel init_hide">
-<div class="text-editor">
-
-<input class="file-name" />
-<textarea class="editor">
-</textarea
-</div>
-<div class="pic-picker">
-</div>
-<div class="file-picker">
-</div>
-                </div>
-                <div class="my-recent-files">
-
-                </div>
-                <div class="public-files">
-
-                </div>
+		<div class="file-picker">
+			File Picker
 		</div>
-	</section>
+	</div>
+	<div class="my-recent-files">
+		List files I recently upload
+	</div>
+	<div class="public-files">
+		List all the files uploaded by everyone
+	</div>
+</div>
+</section>
 
-	<footer>
-		<div id="footer">
-		</div>
-	</footer>
+<footer>
+<div id="footer"></div>
+</footer>
 
 </body>
 </html>

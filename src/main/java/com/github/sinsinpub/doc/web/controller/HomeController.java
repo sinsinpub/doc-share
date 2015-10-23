@@ -32,6 +32,9 @@ public class HomeController extends Controller {
         renderJsp("jsp/test.jsp");
     }
 
+    /**
+     * 跳到个人仪表盘.
+     */
     public void dashboard() {
         render("dashboard.html");
     }

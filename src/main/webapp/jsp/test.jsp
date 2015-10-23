@@ -14,6 +14,7 @@
 <section>
 <div id="body"><c:out
 	value="This is ${pageContext.request.contextPath}${pageContext.request.requestURI}" /></div>
+<% session.setAttribute("test","userId"); %>
 </section>
 <footer>
 <div id="footer"></div>

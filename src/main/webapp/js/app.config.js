@@ -2,8 +2,9 @@ var libs = {
     "version" : {
         "requirejs" : "2.1.20",
         "require-css" : "0.1.8",
-        "jquery" : "1.11.1",
-        "bootstrap" : "3.3.5"
+        "jquery" : "2.1.1",
+        "bootstrap" : "3.3.5",
+        "jolokia.js" : "1.3.2"
     },
     "webjars" : function(id, name) {
         return "webjars/" + id + "/" + libs.version[id] + "/" + name;
@@ -27,6 +28,7 @@ requirejs.config({
         "jquery" : libs.webjars("jquery", "jquery.min"),
         "bootstrap" : libs.webjars("bootstrap", "js/bootstrap.min"),
         "bootstrap-css" : libs.webjars("bootstrap", "css/bootstrap.min"),
+        "jolokia" : libs.webjars("jolokia.js", "jolokia"),
 
         "global-css" : libs.css("global"),
         "module-css" : libs.css("module"),
@@ -36,7 +38,8 @@ requirejs.config({
     "shim" : {
         "bootstrap" : [ "jquery", "css!bootstrap-css" ],
         "header" : [ "jquery", "css!global-css" ],
-        "index" : [ "bootstrap", "header", "css!module-css" ]
+        "jolokia" : [ "jquery" ],
+        "index" : [ "bootstrap", "header", "css!module-css", "jolokia" ]
     }
 });
 
