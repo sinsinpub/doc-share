@@ -29,13 +29,14 @@ requirejs.config({
         "bootstrap-css" : libs.webjars("bootstrap", "css/bootstrap.min"),
 
         "global-css" : libs.css("global"),
+        "module-css" : libs.css("module"),
         "header" : libs.js("header"),
         "index" : libs.js("index")
     },
     "shim" : {
         "bootstrap" : [ "jquery", "css!bootstrap-css" ],
-        "header" : [ "jquery" ],
-        "index" : [ "css!global-css", "bootstrap", "header" ]
+        "header" : [ "jquery", "css!global-css" ],
+        "index" : [ "bootstrap", "header", "css!module-css" ]
     }
 });
 
