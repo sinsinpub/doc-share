@@ -2,6 +2,7 @@ package com.github.sinsinpub.doc.web.interceptor;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.github.sinsinpub.doc.hint.ThreadSafe;
 import com.github.sinsinpub.doc.web.exception.DataNotFoundException;
 import com.github.sinsinpub.doc.web.exception.RuntimeSqlException;
 import com.google.common.base.Throwables;
@@ -19,6 +20,7 @@ import com.jfinal.render.RenderFactory;
  * @author sin_sin
  * @version $Date: Oct 9, 2015 $
  */
+@ThreadSafe
 public class JsonExceptionRenderer implements Interceptor {
 
     public static final String ERROR_JSON_KEY = "error";

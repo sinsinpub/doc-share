@@ -8,6 +8,7 @@ import javax.management.InstanceAlreadyExistsException;
 import net.gescobar.jmx.Management;
 import net.gescobar.jmx.ManagementException;
 
+import com.github.sinsinpub.doc.hint.Singleton;
 import com.jfinal.log.Logger;
 import com.jfinal.plugin.IPlugin;
 
@@ -21,6 +22,7 @@ import com.jfinal.plugin.IPlugin;
  * @author sin_sin
  * @version $Date: Oct 23, 2015 $
  */
+@Singleton
 public class MBeanExporter implements IPlugin {
 
     public static MBeanExporter INSTANCE = new MBeanExporter();

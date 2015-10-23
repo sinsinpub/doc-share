@@ -3,6 +3,7 @@ package com.github.sinsinpub.doc.web.service;
 import java.sql.Timestamp;
 import java.util.Locale;
 
+import com.github.sinsinpub.doc.hint.ThreadSafe;
 import com.github.sinsinpub.doc.web.exception.DataNotFoundException;
 import com.github.sinsinpub.doc.web.i18n.MessageResources;
 import com.github.sinsinpub.doc.web.model.User;
@@ -17,6 +18,7 @@ import com.jfinal.plugin.activerecord.tx.Tx;
  * @author sin_sin
  * @version $Date: Oct 9, 2015 $
  */
+@ThreadSafe
 public class UserService {
 
     private static final User REPO = User.REPO;

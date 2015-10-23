@@ -5,9 +5,10 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.github.sinsinpub.doc.utils.WebUtils;
+import com.github.sinsinpub.doc.hint.Prototype;
 import com.github.sinsinpub.doc.web.i18n.MessageResources;
 import com.github.sinsinpub.doc.web.interceptor.JsonExceptionRenderer;
+import com.github.sinsinpub.doc.web.utils.AjaxWebUtils;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.log.Logger;
@@ -22,6 +23,7 @@ import com.jfinal.log.Logger;
  * @author sin_sin
  * @version $Date: Oct 12, 2015 $
  */
+@Prototype
 @Before(JsonExceptionRenderer.class)
 public abstract class JsonAwareController extends Controller {
 
@@ -75,7 +77,7 @@ public abstract class JsonAwareController extends Controller {
      * @return 默认从<code>request.getRemoteAddr()</code>，也会尝试从一些常见HTTP Header中识别
      */
     protected String getRealRemoteAddr() {
-        return WebUtils.determineRemoteIp(getRequest(), true);
+        return AjaxWebUtils.determineRemoteIp(getRequest(), true);
     }
 
     protected String getHeaderUserAgent() {
@@ -95,7 +97,7 @@ public abstract class JsonAwareController extends Controller {
     }
 
     protected boolean isAjaxRequest() {
-        return WebUtils.isAjaxRequest(getRequest());
+        return AjaxWebUtils.isAjaxRequest(getRequest());
     }
 
     /**

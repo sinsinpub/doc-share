@@ -1,8 +1,10 @@
-package com.github.sinsinpub.doc.utils;
+package com.github.sinsinpub.doc.web.utils;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+
+import com.github.sinsinpub.doc.hint.Utilities;
 
 /**
  * Web常用操作工具集.
@@ -10,9 +12,10 @@ import org.apache.commons.lang3.StringUtils;
  * @author sin_sin
  * @version $Date: Oct 23, 2015 $
  */
-public abstract class WebUtils {
+@Utilities
+public abstract class AjaxWebUtils {
 
-    private WebUtils() {
+    private AjaxWebUtils() {
     }
 
     /**

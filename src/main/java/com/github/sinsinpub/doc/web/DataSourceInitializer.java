@@ -1,5 +1,6 @@
 package com.github.sinsinpub.doc.web;
 
+import com.github.sinsinpub.doc.hint.Utilities;
 import com.github.sinsinpub.doc.web.model.AuditLog;
 import com.github.sinsinpub.doc.web.model.DocFile;
 import com.github.sinsinpub.doc.web.model.User;
@@ -20,6 +21,7 @@ import com.jfinal.plugin.druid.DruidPlugin;
  * @author sin_sin
  * @version $Date: Oct 8, 2015 $
  */
+@Utilities
 public abstract class DataSourceInitializer {
 
     private DataSourceInitializer() {

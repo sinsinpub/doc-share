@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.gescobar.jmx.annotation.ManagedAttribute;
 
 import com.github.sinsinpub.doc.ApplicationVersion;
+import com.github.sinsinpub.doc.hint.Singleton;
 import com.jfinal.handler.Handler;
 import com.jfinal.kit.HandlerKit;
 
@@ -18,6 +19,7 @@ import com.jfinal.kit.HandlerKit;
  * @author sin_sin
  * @version $Date: Oct 12, 2015 $
  */
+@Singleton
 public class WarPathProtectionHandler extends Handler {
 
     public static final String OBJECT_NAME = "doc-share:type=Handler,name=UrlPathProtection";

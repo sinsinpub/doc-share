@@ -5,6 +5,7 @@ import java.util.Locale;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.github.sinsinpub.doc.hint.Utilities;
 import com.jfinal.i18n.I18n;
 import com.jfinal.i18n.Res;
 
@@ -16,6 +17,7 @@ import com.jfinal.i18n.Res;
  * @author sin_sin
  * @version $Date: Oct 12, 2015 $
  */
+@Utilities
 public abstract class MessageResources {
 
     public static final String I18N_BASENAME = "com.github.sinsinpub.doc.web.i18n.messages";

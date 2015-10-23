@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.github.sinsinpub.doc.utils.DatetimeFormatUtils;
+import com.github.sinsinpub.doc.web.utils.DatetimeFormatUtils;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
 

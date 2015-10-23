@@ -1,8 +1,10 @@
-package com.github.sinsinpub.doc.utils;
+package com.github.sinsinpub.doc.web.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import com.github.sinsinpub.doc.hint.Utilities;
 
 /**
  * Rapid format date time with String.format instead of SimpleDateFormat.
@@ -14,6 +16,7 @@ import java.util.Locale;
  * @author sin_sin
  * @version $Date: Oct 8, 2015 $
  */
+@Utilities
 public abstract class DatetimeFormatUtils {
 
     private DatetimeFormatUtils() {

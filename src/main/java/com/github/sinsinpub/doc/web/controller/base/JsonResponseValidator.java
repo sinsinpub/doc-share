@@ -4,6 +4,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.github.sinsinpub.doc.hint.Prototype;
 import com.github.sinsinpub.doc.web.interceptor.JsonExceptionRenderer;
 import com.jfinal.core.Controller;
 import com.jfinal.kit.JsonKit;
@@ -17,6 +18,7 @@ import com.jfinal.validate.Validator;
  * @author sin_sin
  * @version $Date: Oct 9, 2015 $
  */
+@Prototype
 public abstract class JsonResponseValidator extends Validator {
 
     protected static final String ERROR_KEY_PREFIX = "validator.";

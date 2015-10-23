@@ -7,8 +7,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.github.sinsinpub.doc.utils.DatetimeFormatUtils;
+import com.github.sinsinpub.doc.hint.ThreadSafe;
 import com.github.sinsinpub.doc.web.model.AuditLog;
+import com.github.sinsinpub.doc.web.utils.DatetimeFormatUtils;
 import com.jfinal.aop.Interceptor;
 import com.jfinal.aop.Invocation;
 import com.jfinal.core.ActionException;
@@ -17,11 +18,14 @@ import com.jfinal.log.Logger;
 /**
  * 记HTTP访问日志的拦截器，对所有Action Controller全局生效.
  * <p>
- * 然而拦截器并不是原型模式的，实例化由配置初始化过程进行一次，之后用于AOP代理。
+ * 然而拦截器默认并不是原型模式的，实例化由jfinal进行一次并缓存起来(用@Before注解时)，<br>
+ * 或者用户代码在配置初始化过程时进行一次并交给jfinal保留，之后被jfinal用于AOP代理。<br>
+ * 所以最好还是编码时留意线程安全。
  * 
  * @author sin_sin
  * @version $Date: Oct 10, 2015 $
  */
+@ThreadSafe
 public class AccessLoggingInterceptor implements Interceptor {
 
     private static final Logger LOG = Logger.getLogger(AccessLoggingInterceptor.class);
