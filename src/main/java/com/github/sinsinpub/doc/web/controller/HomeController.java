@@ -30,6 +30,10 @@ public class HomeController extends Controller {
         renderJsp("jsp/test.jsp");
     }
 
+    public void dashboard() {
+        render("dashboard.html");
+    }
+
     /**
      * 显示服务端系统机密信息233
      */
@@ -41,6 +45,10 @@ public class HomeController extends Controller {
         props.put("app.version", ApplicationVersion.getInstance().getApplicationVersion());
 
         renderJson(props);
+    }
+
+    public void status() {
+        
     }
 
 }

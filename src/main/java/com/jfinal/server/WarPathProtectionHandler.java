@@ -3,6 +3,8 @@ package com.jfinal.server;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.gescobar.jmx.annotation.ManagedAttribute;
+
 import com.github.sinsinpub.doc.ApplicationVersion;
 import com.jfinal.handler.Handler;
 import com.jfinal.kit.HandlerKit;
@@ -18,6 +20,7 @@ import com.jfinal.kit.HandlerKit;
  */
 public class WarPathProtectionHandler extends Handler {
 
+    public static final String OBJECT_NAME = "doc-share:type=Handler,name=UrlPathProtection";
     /** 当前嵌入的组件会引入com, org, javax这几个目录名开始的包。其余非必要文件已经在打包时被排除。 */
     protected static final String[] DEFAULT_IGNORE_PATH_PREFIXES = { "/com/", "/org/", "/javax/" };
     /** 一般.jsp这些文件不建议直接通过URL访问。应由控制器指派渲染，访问的是映射过不含后缀的地址。 */
@@ -94,6 +97,7 @@ public class WarPathProtectionHandler extends Handler {
         return ignorePathPrefixes;
     }
 
+    @ManagedAttribute
     public void setIgnorePathPrefixes(String[] ignorePathPrefixes) {
         this.ignorePathPrefixes = ignorePathPrefixes;
     }
@@ -102,6 +106,7 @@ public class WarPathProtectionHandler extends Handler {
         return ignorePathSuffixes;
     }
 
+    @ManagedAttribute
     public void setIgnorePathSuffixes(String[] ignorePathSuffixes) {
         this.ignorePathSuffixes = ignorePathSuffixes;
     }
@@ -110,6 +115,7 @@ public class WarPathProtectionHandler extends Handler {
         return addCorsHeaders;
     }
 
+    @ManagedAttribute
     public void setAddCorsHeaders(boolean addCorsHeaders) {
         this.addCorsHeaders = addCorsHeaders;
     }

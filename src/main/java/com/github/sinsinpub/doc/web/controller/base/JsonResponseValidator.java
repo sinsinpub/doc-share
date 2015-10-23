@@ -1,9 +1,10 @@
-package com.github.sinsinpub.doc.web.controller;
+package com.github.sinsinpub.doc.web.controller.base;
 
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.github.sinsinpub.doc.web.interceptor.JsonExceptionRenderer;
 import com.jfinal.core.Controller;
 import com.jfinal.kit.JsonKit;
 import com.jfinal.kit.StrKit;

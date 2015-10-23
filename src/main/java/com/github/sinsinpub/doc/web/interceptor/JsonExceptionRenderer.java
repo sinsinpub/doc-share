@@ -1,4 +1,4 @@
-package com.github.sinsinpub.doc.web.controller;
+package com.github.sinsinpub.doc.web.interceptor;
 
 import javax.servlet.http.HttpServletResponse;
 

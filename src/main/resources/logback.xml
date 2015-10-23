@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false">
 
+    <!-- Custom logger level -->
+    <logger name="${app.logger.package:-com.github.sinsinpub}" level="${app.logger.level:-INFO}" />
+    <logger name="com.jfinal" level="${jfinal.logger.level:-INFO}" />
+
     <!-- Load properties from file optionally -->
     <define name="confPropExists" class="ch.qos.logback.core.property.FileExistsPropertyDefiner">
         <path>conf/log.properties</path>
@@ -51,8 +55,6 @@
             <level>ERROR</level>
         </filter>
     </appender>
-
-    <logger name="${app.logger.package:-com.github}" level="${app.logger.level:-INFO}" />
 
     <root level="${root.logger.level:-WARN}">
         <appender-ref ref="Console" />

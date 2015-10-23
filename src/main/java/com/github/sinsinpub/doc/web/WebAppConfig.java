@@ -3,12 +3,14 @@ package com.github.sinsinpub.doc.web;
 import java.io.File;
 
 import com.github.sinsinpub.doc.web.interceptor.AccessLoggingInterceptor;
+import com.github.sinsinpub.doc.web.jmx.MBeanExporter;
 import com.jfinal.config.Constants;
 import com.jfinal.config.Handlers;
 import com.jfinal.config.Interceptors;
 import com.jfinal.config.JFinalConfig;
 import com.jfinal.config.Plugins;
 import com.jfinal.config.Routes;
+import com.jfinal.ext.handler.UrlSkipHandler;
 import com.jfinal.kit.Prop;
 import com.jfinal.kit.PropKit;
 import com.jfinal.log.Logger;
@@ -54,6 +56,7 @@ public class WebAppConfig extends JFinalConfig {
         ActiveRecordPlugin arp = DataSourceInitializer.initActiveRecordPlugin(dataSource);
         me.add(arp);
         DataSourceInitializer.mappingTablesToEntityClasses(arp);
+        me.add(MBeanExporter.INSTANCE);
     }
 
     public void configInterceptor(Interceptors me) {
@@ -66,7 +69,10 @@ public class WebAppConfig extends JFinalConfig {
     }
 
     public void configHandler(Handlers me) {
-        me.add(new WarPathProtectionHandler());
+        me.add(new UrlSkipHandler("/console/.*", true));
+        WarPathProtectionHandler pph = new WarPathProtectionHandler();
+        me.add(pph);
+        MBeanExporter.INSTANCE.export(pph, WarPathProtectionHandler.OBJECT_NAME);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.github.sinsinpub.doc.web.controller;
 import java.util.List;
 
 import com.github.sinsinpub.doc.web.RoutesDefines;
+import com.github.sinsinpub.doc.web.controller.base.JsonAwareController;
 import com.github.sinsinpub.doc.web.model.AuditLog;
 import com.jfinal.aop.Before;
 import com.jfinal.ext.interceptor.GET;

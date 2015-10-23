@@ -1,6 +1,8 @@
 package com.github.sinsinpub.doc.web.controller;
 
 import com.github.sinsinpub.doc.web.RoutesDefines;
+import com.github.sinsinpub.doc.web.controller.base.JsonAwareController;
+import com.github.sinsinpub.doc.web.controller.base.JsonResponseValidator;
 import com.github.sinsinpub.doc.web.exception.DataNotFoundException;
 import com.github.sinsinpub.doc.web.model.AuditLog;
 import com.github.sinsinpub.doc.web.model.User;
