@@ -23,6 +23,7 @@ import java.net.ServerSocket;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.SessionManager;
+import org.eclipse.jetty.server.handler.GzipHandler;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.server.session.AbstractSessionManager;
 import org.eclipse.jetty.server.session.HashSessionManager;
@@ -36,7 +37,8 @@ import com.jfinal.kit.PathKit;
 import com.jfinal.kit.StrKit;
 
 /**
- * JettyServer is used to config and start jetty web server. Jetty version 8.1.8
+ * JettyServer is used to config and start jetty web server.<br>
+ * Jetty version 8.1.8
  */
 class JettyServer implements IServer {
 
@@ -44,6 +46,7 @@ class JettyServer implements IServer {
     private int port;
     private String context;
     private int scanIntervalSeconds;
+    private boolean enableGzip = false;
     private boolean running = false;
     private Server server;
     private WebAppContext webApp;
@@ -111,7 +114,14 @@ class JettyServer implements IServer {
 
         persistSession(webApp);
 
-        server.setHandler(webApp);
+        if (isEnableGzip()) {
+            GzipHandler gzipHandler = new GzipHandler();
+            gzipHandler.setHandler(webApp);
+            server.setHandler(gzipHandler);
+        } else {
+            server.setHandler(webApp);
+        }
+
         changeClassLoader(webApp);
 
         // configureScanner
@@ -224,6 +234,14 @@ class JettyServer implements IServer {
             }
         }
         return false;
+    }
+
+    public boolean isEnableGzip() {
+        return enableGzip;
+    }
+
+    public void setEnableGzip(boolean enableGzip) {
+        this.enableGzip = enableGzip;
     }
 
 }

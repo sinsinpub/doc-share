@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.apache.jasper.runtime.TldScanner;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.GzipHandler;
 import org.eclipse.jetty.server.session.AbstractSessionManager;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.webapp.WebInfConfiguration;
@@ -24,6 +25,7 @@ public class JettyWarServer implements IServer {
 
     private int port;
     private String context;
+    private boolean enableGzip = true;
     private boolean running = false;
     private Server server;
     private WebAppContext webApp;
@@ -36,6 +38,11 @@ public class JettyWarServer implements IServer {
 
         this.port = port;
         this.context = context;
+    }
+
+    public JettyWarServer(int port, String context, boolean gzip) {
+        this(port, context);
+        this.enableGzip = gzip;
     }
 
     public void start() {
@@ -69,7 +76,14 @@ public class JettyWarServer implements IServer {
         webApp = new WebAppContext(getWarLocation(), context);
         // 不要返回版本号
         server.setSendServerVersion(false);
-        server.setHandler(webApp);
+        if (isEnableGzip()) {
+            // 对应响应内容启用GZIP压缩
+            GzipHandler gzipHandler = new GzipHandler();
+            gzipHandler.setHandler(webApp);
+            server.setHandler(gzipHandler);
+        } else {
+            server.setHandler(webApp);
+        }
         // 在启动过程中允许抛出异常终止启动并退出 JVM
         webApp.setThrowUnavailableOnStartupException(true);
         // 不允许列文件目录
@@ -78,6 +92,7 @@ public class JettyWarServer implements IServer {
         webApp.setAttribute(WebInfConfiguration.CONTAINER_JAR_PATTERN, ".*\\.jar$");
         // 添加HttpOnly到cookies
         ((AbstractSessionManager) webApp.getSessionHandler().getSessionManager()).setHttpOnly(true);
+
         JettyServer.changeClassLoader(webApp);
         clearTldSystemUri();
 
@@ -116,6 +131,34 @@ public class JettyWarServer implements IServer {
         } catch (Exception e) {
             // ignored
         }
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public String getContext() {
+        return context;
+    }
+
+    public void setContext(String context) {
+        this.context = context;
+    }
+
+    public boolean isEnableGzip() {
+        return enableGzip;
+    }
+
+    public void setEnableGzip(boolean enableGzip) {
+        this.enableGzip = enableGzip;
+    }
+
+    public boolean isRunning() {
+        return running;
     }
 
 }
