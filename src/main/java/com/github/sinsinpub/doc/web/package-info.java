@@ -19,7 +19,7 @@
  */
 
 /**
- * 放jfinal配置、初始化相关的类的Web应用“根”节点.
+ * 放JFinal配置、初始化相关的类的Web应用“根节点”.
  */
 package com.github.sinsinpub.doc.web;
 

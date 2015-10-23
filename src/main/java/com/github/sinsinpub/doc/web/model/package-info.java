@@ -21,7 +21,7 @@
 /**
  * 应用业务领域模型定义类.
  * <p>
- * 基于jfinal风格，几乎就只是个Record + DAO服务。
+ * 基于JFinal风格，几乎就只是个Record + DAO服务。
  */
 package com.github.sinsinpub.doc.web.model;
 

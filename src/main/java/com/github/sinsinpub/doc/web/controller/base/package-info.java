@@ -19,7 +19,7 @@
  */
 
 /**
- * 个性化扩展jfinal的控制器后的抽象基础类.
+ * 个性化扩展JFinal的控制器后的抽象基础类.
  */
 package com.github.sinsinpub.doc.web.controller.base;
 

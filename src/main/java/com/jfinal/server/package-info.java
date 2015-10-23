@@ -19,7 +19,7 @@
  */
 
 /**
- * 覆盖jfinal关于jetty服务启动的相关实现.
+ * 覆盖JFinal关于jetty服务启动的相关实现.
  */
 package com.jfinal.server;
 

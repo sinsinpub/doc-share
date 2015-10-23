@@ -5,6 +5,9 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.gescobar.jmx.annotation.Description;
+import net.gescobar.jmx.annotation.ManagedAttribute;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.github.sinsinpub.doc.hint.ThreadSafe;
@@ -26,8 +29,10 @@ import com.jfinal.log.Logger;
  * @version $Date: Oct 10, 2015 $
  */
 @ThreadSafe
+@Description("访问日志记录拦截器")
 public class AccessLoggingInterceptor implements Interceptor {
 
+    public static final String OBJECT_NAME = "doc-share:type=Interceptor,name=AccessLogging";
     private static final Logger LOG = Logger.getLogger(AccessLoggingInterceptor.class);
     private boolean enableAccessLog = true;
     private boolean enableDbAccessLog = false;
@@ -102,6 +107,7 @@ public class AccessLoggingInterceptor implements Interceptor {
         return enableAccessLog;
     }
 
+    @ManagedAttribute(description = "是否开启输出到日志文件")
     public void setEnableAccessLog(boolean enableAccessLog) {
         this.enableAccessLog = enableAccessLog;
     }
@@ -110,6 +116,7 @@ public class AccessLoggingInterceptor implements Interceptor {
         return enableDbAccessLog;
     }
 
+    @ManagedAttribute(description = "是否开启输出到数据库审计表")
     public void setEnableDbAccessLog(boolean enableDbAccessLog) {
         this.enableDbAccessLog = enableDbAccessLog;
     }

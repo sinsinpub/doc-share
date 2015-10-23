@@ -19,7 +19,7 @@
  */
 
 /**
- * jfinal的页面流Controller包.
+ * JFinal的页面流Controller包.
  */
 package com.github.sinsinpub.doc.web.controller;
 

@@ -3,6 +3,7 @@ package com.jfinal.server;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.gescobar.jmx.annotation.Description;
 import net.gescobar.jmx.annotation.ManagedAttribute;
 
 import com.github.sinsinpub.doc.ApplicationVersion;
@@ -20,6 +21,7 @@ import com.jfinal.kit.HandlerKit;
  * @version $Date: Oct 12, 2015 $
  */
 @Singleton
+@Description("保护某些特定URL地址的安全，防止信息泄漏的JFinal处理器")
 public class WarPathProtectionHandler extends Handler {
 
     public static final String OBJECT_NAME = "doc-share:type=Handler,name=UrlPathProtection";
@@ -99,7 +101,7 @@ public class WarPathProtectionHandler extends Handler {
         return ignorePathPrefixes;
     }
 
-    @ManagedAttribute
+    @ManagedAttribute(description = "应被忽略的URI前缀")
     public void setIgnorePathPrefixes(String[] ignorePathPrefixes) {
         this.ignorePathPrefixes = ignorePathPrefixes;
     }
@@ -108,7 +110,7 @@ public class WarPathProtectionHandler extends Handler {
         return ignorePathSuffixes;
     }
 
-    @ManagedAttribute
+    @ManagedAttribute(description = "应被忽略的URI后缀")
     public void setIgnorePathSuffixes(String[] ignorePathSuffixes) {
         this.ignorePathSuffixes = ignorePathSuffixes;
     }
@@ -117,7 +119,7 @@ public class WarPathProtectionHandler extends Handler {
         return addCorsHeaders;
     }
 
-    @ManagedAttribute
+    @ManagedAttribute(description = "是否添加安全Header")
     public void setAddCorsHeaders(boolean addCorsHeaders) {
         this.addCorsHeaders = addCorsHeaders;
     }

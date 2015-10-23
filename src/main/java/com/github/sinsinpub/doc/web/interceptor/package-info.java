@@ -19,7 +19,7 @@
  */
 
 /**
- * 基于jfinal风格的AOP拦截器类实现.
+ * 基于JFinal风格的AOP拦截器类实现.
  */
 package com.github.sinsinpub.doc.web.interceptor;
 

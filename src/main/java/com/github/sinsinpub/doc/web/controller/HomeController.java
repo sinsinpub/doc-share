@@ -3,6 +3,7 @@ package com.github.sinsinpub.doc.web.controller;
 import java.util.Properties;
 
 import com.github.sinsinpub.doc.ApplicationVersion;
+import com.github.sinsinpub.doc.hint.Prototype;
 import com.jfinal.core.Controller;
 import com.jfinal.kit.PathKit;
 
@@ -14,6 +15,7 @@ import com.jfinal.kit.PathKit;
  * @author sin_sin
  * @version $Date: Oct 8, 2015 $
  */
+@Prototype
 public class HomeController extends Controller {
 
     /**
@@ -48,7 +50,7 @@ public class HomeController extends Controller {
     }
 
     public void status() {
-        
+        renderJson("status", "online");
     }
 
 }
