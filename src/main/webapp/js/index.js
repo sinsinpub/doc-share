@@ -22,9 +22,8 @@ var index = {
     readServiceStatus : function() {
         // Test mbean reads, usage:
         // https://jolokia.org/reference/html/clients.html
-        var j4p = require("jolokia")({
-            url : "/console"
-        });
+        /*
+        var j4p = require("jolokia")({ url : "/console"});
         var req = {
             type : "read",
             mbean : "java.lang:type=Memory",
@@ -33,6 +32,7 @@ var index = {
         var response = j4p.request(req);
         console.info(response);
         $('.public-files').text(JSON.stringify(response.value));
+        */
     },
     bindEvents : function() {
         $('.text-file>a').click(index.toggleTextEditor);

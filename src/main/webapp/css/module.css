@@ -19,6 +19,6 @@
 	display: none;
 }
 
-.license .icon {
+.license .icon::after {
 	content: url(images/ccbync.png);
 }

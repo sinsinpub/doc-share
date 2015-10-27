@@ -185,7 +185,12 @@
             <version>3.3.5</version>
             <scope>runtime</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jquery-file-upload</artifactId>
+            <version>9.10.1</version>
+            <scope>runtime</scope>
+        </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>jolokia.js</artifactId>

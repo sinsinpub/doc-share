@@ -3,22 +3,25 @@ var libs = {
         "requirejs" : "2.1.20",
         "require-css" : "0.1.8",
         "jquery" : "2.1.1",
+        "jquery-ui" : "1.9.0",
         "bootstrap" : "3.3.5",
+        "jquery-file-upload" : "9.10.1",
         "jolokia.js" : "1.3.2"
     },
     "webjars" : function(id, name) {
-        return "webjars/" + id + "/" + libs.version[id] + "/" + name;
+        return "/webjars/" + id + "/" + libs.version[id] + "/" + name;
     },
     "js" : function(name) {
-        return "js/" + name;
+        return "/js/" + name;
     },
     "css" : function(name) {
-        return "css/" + name;
+        return "/css/" + name;
     }
 };
 
 requirejs.config({
-    "baseUrl" : "/",
+    "waitSeconds" : 20,
+    "baseUrl" : "/js",
     "map" : {
         "*" : {
             "css" : libs.webjars("require-css", "css")
@@ -26,20 +29,25 @@ requirejs.config({
     },
     "paths" : {
         "jquery" : libs.webjars("jquery", "jquery.min"),
+        "jquery-ui" : libs.webjars("jquery-ui", "js/jquery-ui-1.9.0.custom.min"),
+        "jquery.ui.widget" : libs.webjars("jquery-ui", "js/jquery-ui-1.9.0.custom.min"),
         "bootstrap" : libs.webjars("bootstrap", "js/bootstrap.min"),
         "bootstrap-css" : libs.webjars("bootstrap", "css/bootstrap.min"),
+        "jquery.fileupload" : libs.webjars("jquery-file-upload", "js/jquery.fileupload"),
+        "jquery.fileupload-css" : libs.webjars("jquery-file-upload", "css/jquery.fileupload"),
         "jolokia" : libs.webjars("jolokia.js", "jolokia"),
 
         "global-css" : libs.css("global"),
         "module-css" : libs.css("module"),
-        "header" : libs.js("header"),
         "index" : libs.js("index")
     },
     "shim" : {
+        "jquery-ui" : [ "jquery" ],
+        "jquery.fileupload" : [ "css!jquery.fileupload-css" ],
         "bootstrap" : [ "jquery", "css!bootstrap-css" ],
         "header" : [ "jquery", "css!global-css" ],
         "jolokia" : [ "jquery" ],
-        "index" : [ "bootstrap", "header", "css!module-css", "jolokia" ]
+        "index" : [ "bootstrap", "header", "css!module-css", "jquery.fileupload" ]
     }
 });
 
