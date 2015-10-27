@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import net.gescobar.jmx.annotation.Description;
 import net.gescobar.jmx.annotation.ManagedAttribute;
 
+import com.github.sinsinpub.doc.web.controller.FileUploadController;
 import com.github.sinsinpub.doc.web.controller.HomeController;
 import com.github.sinsinpub.doc.web.controller.LogViewController;
 import com.github.sinsinpub.doc.web.controller.UserController;
@@ -27,6 +28,7 @@ public class RoutesDefines extends Routes {
     @Override
     public void config() {
         add("/", HomeController.class);
+        add("/upload", FileUploadController.class);
         add("/api/user", UserController.class);
         add("/api/log", LogViewController.class);
     }

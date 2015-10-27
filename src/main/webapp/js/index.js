@@ -1,47 +1,40 @@
 var index = {
-    hideAllUploadPanels : function() {
-        $('.text-editor').hide();
-        $('.pic-picker').hide();
-        $('.file-picker').hide();
-    },
-    toggleTextEditor : function() {
-        index.hideAllUploadPanels();
-        $('.text-editor').show();
-        $('.upload-panel').show();
-    },
-    togglePicPicker : function() {
-        index.hideAllUploadPanels();
-        $('.pic-picker').show();
-        $('.upload-panel').show();
-    },
-    toggleFilePicker : function() {
-        index.hideAllUploadPanels();
-        $('.file-picker').show();
-        $('.upload-panel').show();
-    },
     readServiceStatus : function() {
         // Test mbean reads, usage:
         // https://jolokia.org/reference/html/clients.html
         /*
-        var j4p = require("jolokia")({ url : "/console"});
-        var req = {
-            type : "read",
-            mbean : "java.lang:type=Memory",
-            attribute : "HeapMemoryUsage"
-        };
-        var response = j4p.request(req);
-        console.info(response);
-        $('.public-files').text(JSON.stringify(response.value));
-        */
+         * var j4p = require("jolokia")({ url : "/console"}); var req = { type :
+         * "read", mbean : "java.lang:type=Memory", attribute :
+         * "HeapMemoryUsage" }; var response = j4p.request(req);
+         * console.info(response);
+         * $('.public-files').text(JSON.stringify(response.value));
+         */
     },
-    bindEvents : function() {
-        $('.text-file>a').click(index.toggleTextEditor);
-        $('.image-file>a').click(index.togglePicPicker);
-        $('.any-file>a').click(index.toggleFilePicker);
+    initFileUpload : function() {
+        $('#fileupload').fileupload({
+            // Uncomment the following to send cross-domain cookies:
+            // xhrFields: {withCredentials: true}
+        });
+        // Load existing files:
+        $('#fileupload').addClass('fileupload-processing');
+        $.ajax({
+            // Uncomment the following to send cross-domain cookies:
+            // xhrFields: {withCredentials: true},
+            url : "/upload/progress",
+            dataType : 'json',
+            context : $('#fileupload')[0]
+        }).always(function() {
+            $(this).removeClass('fileupload-processing');
+        }).done(function(result) {
+            /*
+            $(this).fileupload('option', 'done').call(this, $.Event('done'), {
+                result : result
+            });
+            */
+        });
     }
 };
 
 $(function() {
-    index.bindEvents();
-    index.readServiceStatus();
+    index.initFileUpload();
 });

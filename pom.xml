@@ -35,6 +35,12 @@
             <version>3.1</version>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>com.jfinal</groupId>
+            <artifactId>cos</artifactId>
+            <version>26Dec2008</version>
+            <scope>runtime</scope>
+        </dependency>
 
         <dependency>
             <groupId>joda-time</groupId>
@@ -172,7 +178,7 @@
             <version>0.1.8</version>
             <scope>runtime</scope>
         </dependency>
-        <!-- Bootstrap depend on jQuery 1.11.1 -->
+        <!-- Bootstrap & jquery-file-upload depend on jQuery 1.11.1 -->
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>jquery</artifactId>

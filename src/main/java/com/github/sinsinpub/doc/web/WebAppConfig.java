@@ -49,6 +49,7 @@ public class WebAppConfig extends JFinalConfig {
         } catch (IllegalArgumentException e) {
             LOG.info("No runtime configuration found, using default properties.");
         }
+        me.setUploadedFileSaveDirectory(getProps().get("jfinal.uploadedFileSaveDir", "./upload"));
         me.setDevMode(getProps().getBoolean("jfinal.devMode", Boolean.FALSE));
         // 并不推荐用JSP，这里只是不想.html默认按FreeMarker渲染
         me.setViewType(ViewType.JSP);

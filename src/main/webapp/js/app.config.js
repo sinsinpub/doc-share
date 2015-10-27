@@ -24,7 +24,7 @@ requirejs.config({
     "baseUrl" : "/js",
     "map" : {
         "*" : {
-            "css" : libs.webjars("require-css", "css")
+            "css" : libs.webjars("require-css", "css.js")
         }
     },
     "paths" : {
@@ -35,19 +35,20 @@ requirejs.config({
         "bootstrap-css" : libs.webjars("bootstrap", "css/bootstrap.min"),
         "jquery.fileupload" : libs.webjars("jquery-file-upload", "js/jquery.fileupload"),
         "jquery.fileupload-css" : libs.webjars("jquery-file-upload", "css/jquery.fileupload"),
+        "jquery.fileupload-ui-css" : libs.webjars("jquery-file-upload", "css/jquery.fileupload-ui"),
         "jolokia" : libs.webjars("jolokia.js", "jolokia"),
 
-        "global-css" : libs.css("global"),
-        "module-css" : libs.css("module"),
+        "style-css" : libs.css("style"),
+        "index-css" : libs.css("index"),
         "index" : libs.js("index")
     },
     "shim" : {
         "jquery-ui" : [ "jquery" ],
-        "jquery.fileupload" : [ "css!jquery.fileupload-css" ],
+        "jquery.fileupload" : [ "css!jquery.fileupload-css", "css!jquery.fileupload-ui-css" ],
         "bootstrap" : [ "jquery", "css!bootstrap-css" ],
-        "header" : [ "jquery", "css!global-css" ],
+        "header" : [ "jquery", "css!style-css" ],
         "jolokia" : [ "jquery" ],
-        "index" : [ "bootstrap", "header", "css!module-css", "jquery.fileupload" ]
+        "index" : [ "bootstrap", "header", "css!index-css", "jquery.fileupload" ]
     }
 });
 
