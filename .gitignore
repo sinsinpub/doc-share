@@ -25,6 +25,8 @@ bin/
 conf/
 db/
 logs/
+log/
+upload/
 *.log
 *.cache
 *.diff
