@@ -28,7 +28,7 @@ public class RoutesDefines extends Routes {
     @Override
     public void config() {
         add("/", HomeController.class);
-        add("/upload", FileUploadController.class);
+        add("/api/upload", FileUploadController.class);
         add("/api/user", UserController.class);
         add("/api/log", LogViewController.class);
     }

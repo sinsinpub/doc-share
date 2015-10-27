@@ -46,9 +46,9 @@ requirejs.config({
         "jquery-ui" : [ "jquery" ],
         "jquery.fileupload" : [ "css!jquery.fileupload-css", "css!jquery.fileupload-ui-css" ],
         "bootstrap" : [ "jquery", "css!bootstrap-css" ],
-        "header" : [ "jquery", "css!style-css" ],
+        "header" : [ "bootstrap", "css!style-css" ],
         "jolokia" : [ "jquery" ],
-        "index" : [ "bootstrap", "header", "css!index-css", "jquery.fileupload" ]
+        "index" : [ "header", "css!index-css", "jquery.fileupload" ]
     }
 });
 

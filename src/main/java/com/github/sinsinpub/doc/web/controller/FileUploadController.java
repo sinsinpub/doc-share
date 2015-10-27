@@ -11,7 +11,7 @@ import com.jfinal.kit.JsonKit;
 import com.jfinal.upload.UploadFile;
 
 /**
- * 映射到`/upload`处理文件数据上传提交的控制器.
+ * 映射到`/api/upload`处理文件数据上传提交的控制器.
  * 
  * @see RoutesDefines
  * @author sin_sin

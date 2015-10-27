@@ -1,6 +1,6 @@
 @charset "utf-8";
 
-.panel-notop {
+.panel-no-border-top {
 	border-top: 0 none !important;
 	border-radius: 0px !important;
 }

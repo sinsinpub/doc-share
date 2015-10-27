@@ -10,7 +10,7 @@ var loadHeader = function(base) {
 
 var loadFooter = function(base) {
     if ($('#footer').children().length == 0) {
-        $('#footer').load((base || '.') + '/footer.html #footer_inner');
+        $('#footer').load((base || '.') + '/header.html #footer_inner');
     }
 };
 
@@ -18,4 +18,3 @@ $(function() {
     loadHeader(window.contextPath);
     loadFooter(window.contextPath);
 });
-

@@ -19,7 +19,7 @@ import com.jfinal.kit.PathKit;
 public class HomeController extends Controller {
 
     /**
-     * 跳到首页.
+     * 跳到首页个人仪表盘.
      */
     public void index() {
         render("index.html");
@@ -33,10 +33,14 @@ public class HomeController extends Controller {
     }
 
     /**
-     * 跳到个人仪表盘.
+     * 跳到指南.
      */
-    public void dashboard() {
-        render("dashboard.html");
+    public void guide() {
+        render("guide.html");
+    }
+
+    public void signin() {
+        render("guide.html");
     }
 
     /**
