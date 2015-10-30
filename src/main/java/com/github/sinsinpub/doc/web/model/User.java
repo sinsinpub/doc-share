@@ -11,6 +11,7 @@ import com.google.common.base.Preconditions;
 import com.jfinal.aop.Enhancer;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Model;
+import com.jfinal.plugin.activerecord.ext.TableEntity;
 
 /**
  * 上传下载文件的操作主体，注册用户.
@@ -18,6 +19,7 @@ import com.jfinal.plugin.activerecord.Model;
  * @author sin_sin
  * @version $Date: Oct 8, 2015 $
  */
+@TableEntity(User.TABLE)
 public class User extends Model<User> {
 
     /** serialVersionUID */

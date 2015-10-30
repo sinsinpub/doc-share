@@ -13,6 +13,7 @@ import com.jfinal.plugin.activerecord.IDataSourceProvider;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.Sqls;
 import com.jfinal.plugin.activerecord.dialect.AnsiSqlDialect;
+import com.jfinal.plugin.activerecord.ext.AutoMappingTablesActiveRecordPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
 
 /**
@@ -49,7 +50,8 @@ public abstract class DataSourceInitializer {
 
     public synchronized static ActiveRecordPlugin initActiveRecordPlugin(
             IDataSourceProvider dataSource) {
-        ActiveRecordPlugin arp = new ActiveRecordPlugin(dataSource);
+        AutoMappingTablesActiveRecordPlugin arp = new AutoMappingTablesActiveRecordPlugin(dataSource);
+        arp.setModelPackageToScan(DataSourceInitializer.class.getPackage().getName() + ".model");
         arp.setDevMode(WebAppConfig.getProps().getBoolean("jfinal.devMode", Boolean.FALSE));
         arp.setShowSql(WebAppConfig.getProps().getBoolean("jfinal.devMode", Boolean.FALSE));
         // 统一让数据库字段都不区分大小写，不然操作值对象属性时都得被迫用全大写
@@ -59,6 +61,12 @@ public abstract class DataSourceInitializer {
         return arp;
     }
 
+    /**
+     * 手工注册表映射.
+     * 
+     * @param arp
+     * @deprecated 已经用自动扫描注解映射方式替换
+     */
     public static void mappingTablesToEntityClasses(ActiveRecordPlugin arp) {
         arp.addMapping(AuditLog.TABLE, AuditLog.class);
         arp.addMapping(User.TABLE, User.class);

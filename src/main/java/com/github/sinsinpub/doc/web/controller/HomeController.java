@@ -27,6 +27,8 @@ public class HomeController extends Controller {
 
     /**
      * 测试下JSP渲染.
+     * <p>
+     * JSP/FreeMarker这些视图文件为了安全建议放在WEB-INF下，在配置Routes时设置viewPath参数来告诉JFinal.
      */
     public void test() {
         renderJsp("jsp/test.jsp");

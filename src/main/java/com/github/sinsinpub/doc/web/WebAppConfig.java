@@ -68,7 +68,8 @@ public class WebAppConfig extends JFinalConfig {
         me.add((IPlugin) dataSource);
         ActiveRecordPlugin arp = DataSourceInitializer.initActiveRecordPlugin(dataSource);
         me.add(arp);
-        DataSourceInitializer.mappingTablesToEntityClasses(arp);
+        //
+        // DataSourceInitializer.mappingTablesToEntityClasses(arp);
         // 注册MBean导出器插件
         me.add(MBeanExporter.INSTANCE);
         MBeanExporter.INSTANCE.export(this, OBJECT_NAME);

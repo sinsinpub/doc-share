@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.github.sinsinpub.doc.web.utils.DatetimeFormatUtils;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.ext.TableEntity;
 
 /**
  * Log entity for auditing kinds of operations.
@@ -16,6 +17,7 @@ import com.jfinal.plugin.activerecord.Page;
  * @author sin_sin
  * @version $Date: Oct 8, 2015 $
  */
+@TableEntity(AuditLog.TABLE)
 public class AuditLog extends Model<AuditLog> {
 
     /** serialVersionUID */

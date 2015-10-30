@@ -1,4 +1,4 @@
-import com.jfinal.server.JettyWarServer;
+package com.jfinal.server;
 
 /**
  * To start embedded Jetty server directly from WAR: java -jar doc-share.war

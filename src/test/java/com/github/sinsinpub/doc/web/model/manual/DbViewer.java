@@ -57,6 +57,15 @@ public class DbViewer {
         }
     }
 
+    @Test
+    public void joinTables() {
+        List<DocFile> list = DocFile.REPO.find("select f.*,u.id as uid,u.nickname from DocFile f left join User u on f.user=u.email");
+        for (DocFile r : list) {
+            logger.info(r.toJson());
+            logger.info(r.getStr(User.NICKNAME));
+        }
+    }
+
     // @Test
     public void listAppStatus() {
         List<Record> list = Db.find("select * from AppStatus");
@@ -65,11 +74,16 @@ public class DbViewer {
         }
     }
 
+    // @Test
+    public void executeSql() {
+        logger.info("" + Db.update("update DocFile set user=?", "admin@yourdomain"));
+    }
+
     @BeforeClass
     public static void setUp() {
         IDataSourceProvider pool = DataSourceInitializer.initDataSourcePool();
         ActiveRecordPlugin arp = DataSourceInitializer.initActiveRecordPlugin(pool);
-        DataSourceInitializer.mappingTablesToEntityClasses(arp);
+        // DataSourceInitializer.mappingTablesToEntityClasses(arp);
         ((IPlugin) pool).start();
         arp.start();
     }
