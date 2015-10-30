@@ -1,6 +1,7 @@
 package com.jfinal.plugin.activerecord.ext;
 
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,7 +22,7 @@ public class AnnotatedModelClassesScanner extends ClassScanner {
     protected static final String CLASSPATH_ROOT = ".";
     protected final byte[] tableEntityAnnotationBytes;
     protected String rootPackagePath;
-    
+
     protected final Set<Class<? extends Model<?>>> modelClasses = new HashSet<Class<? extends Model<?>>>();
 
     public AnnotatedModelClassesScanner() {
@@ -68,7 +69,7 @@ public class AnnotatedModelClassesScanner extends ClassScanner {
     }
 
     public Set<Class<? extends Model<?>>> getModelClasses() {
-        return modelClasses;
+        return Collections.unmodifiableSet(modelClasses);
     }
 
 }

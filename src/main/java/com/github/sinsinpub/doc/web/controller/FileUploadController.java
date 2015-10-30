@@ -55,7 +55,7 @@ public class FileUploadController extends JsonAwareController {
                 fileItems.add(item);
             }
         }
-        renderJson(fileItems.toArray());
+        renderJson("files", fileItems.toArray());
 
     }
 

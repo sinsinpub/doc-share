@@ -12,7 +12,7 @@ import com.jfinal.plugin.activerecord.IDataSourceProvider;
 import com.jfinal.plugin.activerecord.Model;
 
 /**
- * 支持扫描带{@link TableEntity}注解的Model类，自持注册映射.
+ * 支持扫描带{@link TableEntity}注解的Model类，自动注册映射.
  * 
  * @see ActiveRecordPlugin
  * @author sin_sin
