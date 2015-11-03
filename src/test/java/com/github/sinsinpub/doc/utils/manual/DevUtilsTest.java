@@ -19,7 +19,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.github.sinsinpub.doc.web.i18n.MessageResources;
-import com.github.sinsinpub.doc.web.utils.DatetimeFormatUtils;
+import com.jfinal.ext.kit.DateKit;
 import com.jfinal.kit.JsonKit;
 import com.jfinal.kit.Ret;
 import com.jfinal.log.Logger;
@@ -33,12 +33,12 @@ public class DevUtilsTest {
     @Test
     public void testStringFormat() {
         Date d = new Date();
-        logger.info("ISO:  " + DatetimeFormatUtils.formatIso(d));
-        logger.info("Date: " + DatetimeFormatUtils.formatDateOnly(d));
-        logger.info("Date: " + DatetimeFormatUtils.formatDateCompact(d));
-        logger.info("Time: " + DatetimeFormatUtils.formatTimeOnly(d));
-        logger.info("Time: " + DatetimeFormatUtils.formatTimeCompact(d));
-        logger.info("US:   " + DatetimeFormatUtils.format("ddMMMyy", d, Locale.US));
+        logger.info("ISO:  " + DateKit.formatIso(d));
+        logger.info("Date: " + DateKit.formatDateOnly(d));
+        logger.info("Date: " + DateKit.formatDateCompact(d));
+        logger.info("Time: " + DateKit.formatTimeOnly(d));
+        logger.info("Time: " + DateKit.formatTimeCompact(d));
+        logger.info("US:   " + DateKit.format("ddMMMyy", d, Locale.US));
         logger.info("But common-lang3's ISO:   "
                 + DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.format(d));
         logger.info("So our ISO is not actual: "

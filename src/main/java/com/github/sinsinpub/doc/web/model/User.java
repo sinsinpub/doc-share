@@ -9,9 +9,9 @@ import com.github.sinsinpub.doc.web.exception.RuntimeSqlException;
 import com.github.sinsinpub.doc.web.service.UserService;
 import com.google.common.base.Preconditions;
 import com.jfinal.aop.Enhancer;
+import com.jfinal.ext.plugin.activerecord.TableEntity;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Model;
-import com.jfinal.plugin.activerecord.ext.TableEntity;
 
 /**
  * 上传下载文件的操作主体，注册用户.

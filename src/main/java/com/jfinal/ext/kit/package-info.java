@@ -19,7 +19,7 @@
  */
 
 /**
- * 对JFinal ActiveRecord Plugin的扩展实现.
+ * JFinal工具包扩展.
  */
-package com.jfinal.plugin.activerecord.ext;
+package com.jfinal.ext.kit;
 

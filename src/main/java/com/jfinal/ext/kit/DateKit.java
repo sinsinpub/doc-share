@@ -1,4 +1,4 @@
-package com.github.sinsinpub.doc.web.utils;
+package com.jfinal.ext.kit;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,13 +13,14 @@ import com.github.sinsinpub.doc.hint.Utilities;
  * href="http://docs.oracle.com/javase/6/docs/api/java/util/Formatter.html#syntax">Formatter</a>
  * 
  * @see org.apache.commons.lang3.time.DateFormatUtils
+ * @see org.joda.time.format.DateTimeFormatter
  * @author sin_sin
  * @version $Date: Oct 8, 2015 $
  */
 @Utilities
-public abstract class DatetimeFormatUtils {
+public abstract class DateKit {
 
-    private DatetimeFormatUtils() {
+    private DateKit() {
     }
 
     /**

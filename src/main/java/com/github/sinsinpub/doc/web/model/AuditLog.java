@@ -6,10 +6,10 @@ import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.github.sinsinpub.doc.web.utils.DatetimeFormatUtils;
+import com.jfinal.ext.kit.DateKit;
+import com.jfinal.ext.plugin.activerecord.TableEntity;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
-import com.jfinal.plugin.activerecord.ext.TableEntity;
 
 /**
  * Log entity for auditing kinds of operations.
@@ -85,7 +85,7 @@ public class AuditLog extends Model<AuditLog> {
         log.set(TIMESTAMP, timestamp);
         log.set(ADDR, StringUtils.abbreviate(addr, 50));
         log.set(USER, StringUtils.abbreviate(user, 130));
-        log.set(TIME, DatetimeFormatUtils.formatIso(new Date(timestamp)));
+        log.set(TIME, DateKit.formatIso(new Date(timestamp)));
         log.set(LEVEL, StringUtils.abbreviate(level, 10));
         log.set(MODULE, StringUtils.abbreviate(module, 255));
         log.set(METHOD, StringUtils.abbreviate(method, 255));

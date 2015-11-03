@@ -1,9 +1,10 @@
-package com.jfinal.plugin.activerecord.ext;
+package com.jfinal.ext.plugin.activerecord;
 
 import java.util.Set;
 
 import javax.sql.DataSource;
 
+import com.jfinal.ext.kit.AnnotatedClassesScanner;
 import com.jfinal.kit.StrKit;
 import com.jfinal.log.Logger;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
@@ -69,24 +70,28 @@ public class AutoMappingTablesActiveRecordPlugin extends ActiveRecordPlugin {
         return super.start();
     }
 
+    @SuppressWarnings("unchecked")
     protected void autoAddMappings() {
-        AnnotatedModelClassesScanner scanner = new AnnotatedModelClassesScanner();
-        Set<Class<? extends Model<?>>> modelClasses = StrKit.isBlank(getModelPackageToScan()) ? scanner.scanClasspath()
-                .getModelClasses()
-                : scanner.scanPackage(getModelPackageToScan()).getModelClasses();
-        logger.debug(String.format("Model classes annotated by @TableEntity found: %d",
+        // 在指定包下扫描带@TableEntity注解的所有Model类
+        AnnotatedClassesScanner scanner = new AnnotatedClassesScanner(Model.class, TableEntity.class);
+        Set<Class<?>> modelClasses = StrKit.isBlank(getModelPackageToScan()) ? scanner.scanClasspath()
+                .getResults()
+                : scanner.scanPackage(getModelPackageToScan()).getResults();
+        logger.info(String.format("Found Model annotated by @TableEntity classes: %d",
                 modelClasses.size()));
-        for (Class<? extends Model<?>> mc : modelClasses) {
+        for (Class<?> c : modelClasses) {
+            Class<Model<?>> mc = (Class<Model<?>>) c;
             String cn = mc.getSimpleName();
             TableEntity te = (TableEntity) mc.getAnnotation(TableEntity.class);
             String tn = StrKit.isBlank(te.name()) ? te.value() : te.name();
+            tn = StrKit.isBlank(tn) ? cn : tn;
             String pk = te.pk();
             if (StrKit.notBlank(pk)) {
-                logger.info(String.format(
+                logger.debug(String.format(
                         "Auto mapping table '%s' to class '%s' with primary key '%s'", tn, cn, pk));
                 addMapping(tn, pk, mc);
             } else {
-                logger.info(String.format("Auto mapping table '%s' to class '%s'", tn, cn));
+                logger.debug(String.format("Auto mapping table '%s' to class '%s'", tn, cn));
                 addMapping(tn, mc);
             }
         }

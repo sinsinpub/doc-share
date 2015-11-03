@@ -4,8 +4,8 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
+import com.jfinal.ext.plugin.activerecord.TableEntity;
 import com.jfinal.plugin.activerecord.Model;
-import com.jfinal.plugin.activerecord.ext.TableEntity;
 
 /**
  * 被匿名或注册用户上传下载的文件(档)对象实体.

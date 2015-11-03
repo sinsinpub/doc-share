@@ -1,4 +1,4 @@
-package com.jfinal.plugin.activerecord.ext;
+package com.jfinal.ext.plugin.activerecord;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -21,7 +21,7 @@ import java.lang.annotation.Target;
 @Target({ ElementType.TYPE })
 public @interface TableEntity {
     /** 表名(默认属性) */
-    String value();
+    String value() default "";
 
     /** 表名 */
     String name() default "";

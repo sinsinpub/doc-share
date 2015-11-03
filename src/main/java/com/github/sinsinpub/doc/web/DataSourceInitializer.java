@@ -4,6 +4,7 @@ import com.github.sinsinpub.doc.hint.Utilities;
 import com.github.sinsinpub.doc.web.model.AuditLog;
 import com.github.sinsinpub.doc.web.model.DocFile;
 import com.github.sinsinpub.doc.web.model.User;
+import com.jfinal.ext.plugin.activerecord.AutoMappingTablesActiveRecordPlugin;
 import com.jfinal.kit.Prop;
 import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
@@ -13,7 +14,6 @@ import com.jfinal.plugin.activerecord.IDataSourceProvider;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.Sqls;
 import com.jfinal.plugin.activerecord.dialect.AnsiSqlDialect;
-import com.jfinal.plugin.activerecord.ext.AutoMappingTablesActiveRecordPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
 
 /**

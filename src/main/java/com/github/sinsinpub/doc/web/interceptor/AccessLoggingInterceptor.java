@@ -12,10 +12,10 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.github.sinsinpub.doc.hint.ThreadSafe;
 import com.github.sinsinpub.doc.web.model.AuditLog;
-import com.github.sinsinpub.doc.web.utils.DatetimeFormatUtils;
 import com.jfinal.aop.Interceptor;
 import com.jfinal.aop.Invocation;
 import com.jfinal.core.ActionException;
+import com.jfinal.ext.kit.DateKit;
 import com.jfinal.log.Logger;
 
 /**
@@ -67,7 +67,7 @@ public class AccessLoggingInterceptor implements Interceptor {
             HttpServletResponse response = inv.getController().getResponse();
 
             // 模仿NCSA公共格式生成一行日志
-            String startTime = DatetimeFormatUtils.formatIso(new Date(start));
+            String startTime = DateKit.formatIso(new Date(start));
             // 登入User获取方式需要实现，下同
             String remoteUser = StringUtils.defaultString(request.getRemoteUser(), "-");
             String requestUrl = request.getRequestURI();
