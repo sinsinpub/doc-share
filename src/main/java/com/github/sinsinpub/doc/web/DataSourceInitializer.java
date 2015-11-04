@@ -65,7 +65,6 @@ public abstract class DataSourceInitializer {
      * 手工注册表映射.
      * 
      * @param arp
-     * @deprecated 已经用自动扫描注解映射方式替换
      */
     public static void mappingTablesToEntityClasses(ActiveRecordPlugin arp) {
         arp.addMapping(AuditLog.TABLE, AuditLog.class);

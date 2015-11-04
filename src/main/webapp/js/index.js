@@ -29,8 +29,9 @@ var index = {
             url : url,
             dataType : 'json',
             autoUpload : false,
-            acceptFileTypes : /(\.|\/)(gif|jpe?g|png|txt|md|docx?|pptx?|xlsx?)$/i,
-            maxFileSize : 9999000,
+            // acceptFileTypes : /(\.|\/)(gif|jpe?g|png|txt|md|docx?|pptx?|xlsx?)$/i,
+            maxFileSize : 9999000, // 10Mo
+            maxChunkSize : 1000000, // 1Mo
             // Enable image resizing, except for Android and Opera,
             // which actually support image resizing, but fail to
             // send Blob objects via XHR requests:
@@ -47,8 +48,7 @@ var index = {
                 }
                 node.appendTo(data.context);
             });
-        }).on(
-                'fileuploadprocessalways',
+        }).on('fileuploadprocessalways',
                 function(e, data) {
                     var index = data.index, file = data.files[index], node = $(data.context
                             .children()[index]);

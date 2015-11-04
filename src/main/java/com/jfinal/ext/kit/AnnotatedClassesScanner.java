@@ -95,7 +95,6 @@ public class AnnotatedClassesScanner extends ClassScanner {
         return this;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     protected void onEntry(EntryData entryData) throws Exception {
         String entryName = entryData.getName();
