@@ -58,6 +58,12 @@ cp src/main/resources/app-default.properties conf/runtime.properties
 cp src/main/resources/log.properties conf/
 ```
 
+* `src/main/resources/deploy`目录下有作为服务启动的示例脚本和配置。可以把它们复制到WAR包所在位置使用
+
+```
+doc-share.sh start/stop/restart/status
+```
+
 ## Developer Guide
 
 * 了解项目构成和包作用：其实看源码最直接，也可以生成javadoc来阅读：

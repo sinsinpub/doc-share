@@ -6,6 +6,7 @@ import java.util.Properties;
 import net.gescobar.jmx.annotation.Description;
 import net.gescobar.jmx.annotation.ManagedAttribute;
 
+import com.github.sinsinpub.doc.ApplicationVersion;
 import com.github.sinsinpub.doc.web.interceptor.AccessLoggingInterceptor;
 import com.github.sinsinpub.doc.web.jmx.MBeanExporter;
 import com.jfinal.config.Constants;
@@ -14,6 +15,7 @@ import com.jfinal.config.Interceptors;
 import com.jfinal.config.JFinalConfig;
 import com.jfinal.config.Plugins;
 import com.jfinal.config.Routes;
+import com.jfinal.core.Const;
 import com.jfinal.ext.handler.UrlSkipHandler;
 import com.jfinal.kit.Prop;
 import com.jfinal.kit.PropKit;
@@ -43,6 +45,7 @@ public class WebAppConfig extends JFinalConfig {
     }
 
     public void configConstant(Constants me) {
+        printBanner();
         // 尝试从文件系统特定位置读取配置文件来替换默认的
         try {
             Prop runtimeCfg = PropKit.use(new File("./conf/runtime.properties"));
@@ -54,6 +57,12 @@ public class WebAppConfig extends JFinalConfig {
         me.setDevMode(getProps().getBoolean("jfinal.devMode", Boolean.FALSE));
         // 并不推荐用JSP，这里只是不想.html默认按FreeMarker渲染
         me.setViewType(ViewType.JSP);
+    }
+
+    private void printBanner() {
+        LOG.info(String.format("Starting %s v%s application powered by JFinal %s...",
+                ApplicationVersion.getInstance().getApplicationName(),
+                ApplicationVersion.getInstance().getApplicationVersion(), Const.JFINAL_VERSION));
     }
 
     public void configRoute(Routes me) {
