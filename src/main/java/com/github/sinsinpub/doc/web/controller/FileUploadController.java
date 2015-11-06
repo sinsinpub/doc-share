@@ -48,7 +48,7 @@ public class FileUploadController extends JsonAwareController {
                 Map<String, Object> item = new HashMap<String, Object>();
                 item.put("name", localFileName);
                 item.put("size", 0l);
-                item.put("url", "/download/" + localFileName);
+                item.put("url", "/download/byname?n=" + localFileName);
                 item.put("thumbnail_url", "");
                 item.put("delete_url", "");
                 item.put("delete_type", "POST");

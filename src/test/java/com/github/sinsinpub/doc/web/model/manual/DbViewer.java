@@ -82,8 +82,8 @@ public class DbViewer {
     @BeforeClass
     public static void setUp() {
         IDataSourceProvider pool = DataSourceInitializer.initDataSourcePool();
-        ActiveRecordPlugin arp = DataSourceInitializer.initActiveRecordPlugin(pool);
         // 测试线程ClassLoader找的是test位置，自动扫描注解映射方式无法正常工作
+        ActiveRecordPlugin arp = DataSourceInitializer.initActiveRecordPlugin(pool, false);
         DataSourceInitializer.mappingTablesToEntityClasses(arp);
         ((IPlugin) pool).start();
         arp.start();

@@ -25,7 +25,7 @@ public class InitDbTables {
     @BeforeClass
     public static void setUp() {
         IDataSourceProvider pool = DataSourceInitializer.initDataSourcePool();
-        ActiveRecordPlugin arp = DataSourceInitializer.initActiveRecordPlugin(pool);
+        ActiveRecordPlugin arp = DataSourceInitializer.initActiveRecordPlugin(pool, false);
         ((IPlugin) pool).start();
         arp.start();
     }

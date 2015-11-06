@@ -30,7 +30,14 @@ java -jar target\doc-share.war {port} {context}
 ```
 
 * 如果没有加port等参数并且顺利启动，浏览器打开`http://localhost/`即可Enjoy!
+
 * 由于默认的port 80可能没有权限监听，如果提示被占用则换一个大于1024的端口号(如8080)即可。
+
+* 在没有Maven的环境下也可以添加参数运行war包完成初始化数据库。重复运行不影响已经存在的db。如需重置，删除db文件夹即可。
+
+```
+java -DcreateDb=true doc-share.war
+```
 
 * 要以开发调试状态启动jetty只需(port默认就是8080)
 

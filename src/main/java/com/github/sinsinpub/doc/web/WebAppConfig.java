@@ -17,6 +17,7 @@ import com.jfinal.config.Routes;
 import com.jfinal.ext.handler.UrlSkipHandler;
 import com.jfinal.kit.Prop;
 import com.jfinal.kit.PropKit;
+import com.jfinal.kit.StrKit;
 import com.jfinal.log.Logger;
 import com.jfinal.plugin.IPlugin;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
@@ -63,16 +64,40 @@ public class WebAppConfig extends JFinalConfig {
     }
 
     public void configPlugin(Plugins me) {
-        // 注册默认数据源和AR插件
+        // 注册默认数据源和表映射AR插件
         IDataSourceProvider dataSource = DataSourceInitializer.initDataSourcePool();
         me.add((IPlugin) dataSource);
-        ActiveRecordPlugin arp = DataSourceInitializer.initActiveRecordPlugin(dataSource);
-        me.add(arp);
-        //
-        // DataSourceInitializer.mappingTablesToEntityClasses(arp);
+        me.add(configActiveRecordPlugin(dataSource));
         // 注册MBean导出器插件
         me.add(MBeanExporter.INSTANCE);
         MBeanExporter.INSTANCE.export(this, OBJECT_NAME);
+    }
+
+    /**
+     * 配置ActiveRecordPlugin插件.
+     * <p>
+     * 如果有需要，强行在启动时创建表结构。
+     */
+    private ActiveRecordPlugin configActiveRecordPlugin(IDataSourceProvider dataSource) {
+        ActiveRecordPlugin arp = null;
+        if (getProps().getBoolean("jfinal.createDb", false)
+                || StrKit.notNull(System.getProperty("createDb"))) {
+            LOG.info("Database tables initializing is requested.");
+            arp = DataSourceInitializer.initActiveRecordPlugin(dataSource, false);
+            ((IPlugin) dataSource).start();
+            arp.start();
+            try {
+                DataSourceInitializer.initTablesAndData();
+            } catch (IllegalStateException e) {
+                LOG.info(e.getMessage());
+            } finally {
+                System.exit(1);
+            }
+        } else {
+            arp = DataSourceInitializer.initActiveRecordPlugin(dataSource);
+            // DataSourceInitializer.mappingTablesToEntityClasses(arp);
+        }
+        return arp;
     }
 
     public void configInterceptor(Interceptors me) {

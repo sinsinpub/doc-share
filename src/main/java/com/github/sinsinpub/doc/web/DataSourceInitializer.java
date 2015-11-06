@@ -1,6 +1,6 @@
 package com.github.sinsinpub.doc.web;
 
-import com.github.sinsinpub.doc.hint.Utilities;
+import com.github.sinsinpub.doc.ApplicationVersion;
 import com.github.sinsinpub.doc.web.model.AuditLog;
 import com.github.sinsinpub.doc.web.model.DocFile;
 import com.github.sinsinpub.doc.web.model.User;
@@ -22,7 +22,6 @@ import com.jfinal.plugin.druid.DruidPlugin;
  * @author sin_sin
  * @version $Date: Oct 8, 2015 $
  */
-@Utilities
 public abstract class DataSourceInitializer {
 
     private DataSourceInitializer() {
@@ -50,14 +49,32 @@ public abstract class DataSourceInitializer {
 
     public synchronized static ActiveRecordPlugin initActiveRecordPlugin(
             IDataSourceProvider dataSource) {
-        AutoMappingTablesActiveRecordPlugin arp = new AutoMappingTablesActiveRecordPlugin(dataSource);
-        arp.setModelPackageToScan(DataSourceInitializer.class.getPackage().getName() + ".model");
+        return initActiveRecordPlugin(dataSource, true);
+    }
+
+    public synchronized static ActiveRecordPlugin initActiveRecordPlugin(
+            IDataSourceProvider dataSource, boolean useAutoMapping) {
+        ActiveRecordPlugin arp = createActiveRecordPlugin(dataSource, useAutoMapping);
         arp.setDevMode(WebAppConfig.getProps().getBoolean("jfinal.devMode", Boolean.FALSE));
         arp.setShowSql(WebAppConfig.getProps().getBoolean("jfinal.devMode", Boolean.FALSE));
         // 统一让数据库字段都不区分大小写，不然操作值对象属性时都得被迫用全大写
         arp.setContainerFactory(new CaseInsensitiveContainerFactory(true));
         // 默认是MySQL方言，我们用H2/HSQLDB时要换ANSI标准
         arp.setDialect(new AnsiSqlDialect());
+        return arp;
+    }
+
+    static ActiveRecordPlugin createActiveRecordPlugin(IDataSourceProvider dataSource,
+            boolean useAutoMapping) {
+        ActiveRecordPlugin arp = null;
+        if (useAutoMapping) {
+            arp = new AutoMappingTablesActiveRecordPlugin(dataSource);
+            ((AutoMappingTablesActiveRecordPlugin) arp).setModelPackageToScan(DataSourceInitializer.class.getPackage()
+                    .getName()
+                    + ".model");
+        } else {
+            arp = new ActiveRecordPlugin(dataSource);
+        }
         return arp;
     }
 
@@ -73,7 +90,7 @@ public abstract class DataSourceInitializer {
     }
 
     public static boolean checkIfTablesNotInited() {
-        Record r = Db.findFirst("select 1 from AppStatus where inited=1");
+        Record r = Db.findFirst("select 1 from AppStatus where inited=1 limit 1;");
         return r == null;
     }
 
@@ -89,11 +106,13 @@ public abstract class DataSourceInitializer {
         Db.update(Sqls.get(User.TABLE));
         Db.update(Sqls.get(DocFile.TABLE));
 
-        Db.update("insert into AppStatus values(1, 1);");
+        Db.update("truncate table AppStatus;");
+        Db.update("insert into AppStatus values(?, ?);", 1, ApplicationVersion.getInstance()
+                .getApplicationVersion());
         if (checkIfTablesNotInited()) {
             throw new IllegalStateException("Initializing failed.");
         }
-        // JFinal的蛋疼初始化设计决定了无法做到启动时发现不对立即建表再继续启动并映射，只好建好结构先
+        // JFinal的蛋疼初始化设计决定了无法做到启动时发现不对立即建表再继续启动并映射，只好建好结构先，再抛异常要求重启
         throw new IllegalStateException("Initialized, restart app plz.");
     }
 

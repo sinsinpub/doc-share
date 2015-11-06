@@ -16,4 +16,9 @@ public class FileDownloadController extends JsonAwareController {
         renderJson("status", "ok");
     }
 
+    public void byname() {
+        String filename = getPara("n");
+        renderJson("file", filename);
+    }
+
 }
