@@ -6,6 +6,7 @@
     <artifactId>doc-share</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
+    <name>${project.artifactId}</name>
     <description>Simple WebApp for quickly sharing small files and document snippets.</description>
     <url>https://github.com/sinsinpub/doc-share</url>
 
@@ -78,6 +79,15 @@
             <version>1.2.6</version>
         </dependency>
 
+        <!-- Dependency Injector -->
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>4.0</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+
         <!-- Logging framework -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -87,6 +97,18 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>log4j-over-slf4j</artifactId>
+            <version>1.7.6</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>1.7.6</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jul-to-slf4j</artifactId>
             <version>1.7.6</version>
             <scope>runtime</scope>
         </dependency>
@@ -285,6 +307,23 @@
                         <exclude>**/manual/**/*</exclude>
                         <exclude>**/skip/**/*</exclude>
                     </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>create</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <doCheck>false</doCheck>
+                    <doUpdate>false</doUpdate>
                 </configuration>
             </plugin>
 
@@ -504,5 +543,10 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+
+    <scm>
+        <url>${project.url}</url>
+        <connection>scm:git:${project.url}.git</connection>
+    </scm>
 
 </project>

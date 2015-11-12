@@ -1,5 +1,7 @@
 package com.github.sinsinpub.doc.web.controller;
 
+import java.util.Map;
+
 import com.github.sinsinpub.doc.web.RoutesDefines;
 import com.github.sinsinpub.doc.web.controller.base.JsonAwareController;
 import com.github.sinsinpub.doc.web.controller.base.JsonResponseValidator;
@@ -8,9 +10,11 @@ import com.github.sinsinpub.doc.web.model.AuditLog;
 import com.github.sinsinpub.doc.web.model.User;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.Maps;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.ext.interceptor.NoUrlPara;
+import com.jfinal.ext.plugin.guice.GuicePlugin;
 import com.jfinal.kit.StrKit;
 
 /**
@@ -44,6 +48,19 @@ public class UserController extends JsonAwareController {
         }
     }
 
+    public void showInject() {
+        if(!GuicePlugin.isRunning()) {
+            renderJsonEmpty();
+        }
+        User repo = GuicePlugin.getInstance(User.class);
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("user1.id", System.identityHashCode(repo));
+        map.put("user2.id", System.identityHashCode(GuicePlugin.getInstance(User.class)));
+        map.put("userService1.id", System.identityHashCode(repo.getUserService()));
+        map.put("userService2.id", System.identityHashCode(repo.getUserService()));
+        renderJson(map);
+    }
+
     @Before(UserFormValidator.class)
     public void create() {
         User form = getModel(User.class);
@@ -74,7 +91,14 @@ public class UserController extends JsonAwareController {
         String sourceEmail = getPara("src", "admin1");
         String targetEmail = getPara("tar", "admin2");
         try {
-            User user = User.SERVICE.rename(sourceEmail, targetEmail, getRemoteAddr(), getLocale());
+            User user = null;
+            if (GuicePlugin.isRunning()) {
+                user = GuicePlugin.getInstance(User.class)
+                        .getUserService()
+                        .rename(sourceEmail, targetEmail, getRemoteAddr(), getLocale());
+            } else {
+                user = User.SERVICE.rename(sourceEmail, targetEmail, getRemoteAddr(), getLocale());
+            }
             AuditLog.REPO.addOpLog(AuditLog.LEVEL_INFO, getClass().getSimpleName(), "RenameUser",
                     user.toJson(), getRemoteAddr(), null, null);
             renderJsonEmpty();

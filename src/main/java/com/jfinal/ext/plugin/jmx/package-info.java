@@ -21,5 +21,5 @@
 /**
  * 应用JMX管理控制台相关工具类.
  */
-package com.github.sinsinpub.doc.web.jmx;
+package com.jfinal.ext.plugin.jmx;
 

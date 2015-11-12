@@ -8,7 +8,6 @@ import net.gescobar.jmx.annotation.ManagedAttribute;
 
 import com.github.sinsinpub.doc.ApplicationVersion;
 import com.github.sinsinpub.doc.web.interceptor.AccessLoggingInterceptor;
-import com.github.sinsinpub.doc.web.jmx.MBeanExporter;
 import com.jfinal.config.Constants;
 import com.jfinal.config.Handlers;
 import com.jfinal.config.Interceptors;
@@ -17,6 +16,7 @@ import com.jfinal.config.Plugins;
 import com.jfinal.config.Routes;
 import com.jfinal.core.Const;
 import com.jfinal.ext.handler.UrlSkipHandler;
+import com.jfinal.ext.plugin.jmx.MBeanExporter;
 import com.jfinal.kit.Prop;
 import com.jfinal.kit.PropKit;
 import com.jfinal.kit.StrKit;
@@ -77,6 +77,7 @@ public class WebAppConfig extends JFinalConfig {
         IDataSourceProvider dataSource = DataSourceInitializer.initDataSourcePool();
         me.add((IPlugin) dataSource);
         me.add(configActiveRecordPlugin(dataSource));
+        // me.add(new GuicePlugin());
         // 注册MBean导出器插件
         me.add(MBeanExporter.INSTANCE);
         MBeanExporter.INSTANCE.export(this, OBJECT_NAME);

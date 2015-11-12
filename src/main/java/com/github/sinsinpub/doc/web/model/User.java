@@ -5,11 +5,17 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
+import javax.annotation.Resource;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import com.github.sinsinpub.doc.web.exception.RuntimeSqlException;
 import com.github.sinsinpub.doc.web.service.UserService;
+import com.github.sinsinpub.doc.web.service.UserServiceImpl;
 import com.google.common.base.Preconditions;
 import com.jfinal.aop.Enhancer;
 import com.jfinal.ext.plugin.activerecord.TableEntity;
+import com.jfinal.ext.plugin.guice.GuicePlugin;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Model;
 
@@ -19,7 +25,12 @@ import com.jfinal.plugin.activerecord.Model;
  * @author sin_sin
  * @version $Date: Oct 8, 2015 $
  */
+// 这是我们自定义的表映射注解
 @TableEntity(User.TABLE)
+// 这是JSR-250注解
+@Resource
+// 这个不是我们的hint，是JSR-330注解
+@Singleton
 public class User extends Model<User> {
 
     /** serialVersionUID */
@@ -42,8 +53,22 @@ public class User extends Model<User> {
 
     /** 由Model提供的处理本值对象专用服务方法的静态快捷方式，适合调用线程安全的那些方法时用 */
     public static final User REPO = new User();
-    /** 简单静态实例，没有也无法利用到DI容器，而且要求所有方法实现必需线程安全 */
-    public static final UserService SERVICE = Enhancer.enhance(new UserService());
+    /** 简单静态实例，没有利用到DI容器管理依赖。而且要求它无状态，里面所有方法实现必需线程安全 */
+    public static final UserService SERVICE = Enhancer.enhance(new UserServiceImpl());
+
+    /**
+     * 用Guice DI注入实现，然后再添加拦截增强.
+     * <p>
+     * 绑定方法除了按Guice标准，还利用了JSR-330注解@Singleton以及扫描JSR-250注解@Resouirce。
+     * 
+     * @see GuicePlugin 详细可以参考GuicePlugin扩展
+     */
+    @Inject
+    private UserService userService;
+
+    public UserService getUserService() {
+        return Enhancer.enhance(userService);
+    }
 
     public User() {
     }

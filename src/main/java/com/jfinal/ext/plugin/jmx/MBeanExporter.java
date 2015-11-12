@@ -1,4 +1,4 @@
-package com.github.sinsinpub.doc.web.jmx;
+package com.jfinal.ext.plugin.jmx;
 
 import java.util.Collections;
 import java.util.HashSet;
