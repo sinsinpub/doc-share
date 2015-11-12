@@ -62,7 +62,7 @@ public class WebAppConfig extends JFinalConfig {
     private void printBanner() {
         LOG.info(String.format("Starting %s v%s application powered by JFinal %s...",
                 ApplicationVersion.getInstance().getApplicationName(),
-                ApplicationVersion.getInstance().getApplicationVersion(), Const.JFINAL_VERSION));
+                ApplicationVersion.getInstance().getProjectVersion(), Const.JFINAL_VERSION));
     }
 
     public void configRoute(Routes me) {

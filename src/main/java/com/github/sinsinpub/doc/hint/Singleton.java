@@ -31,7 +31,10 @@ import java.lang.annotation.Target;
  * <p>
  * 与{@link Prototype}一起，这组声明主要参考了Spring Framework的BeanFactory实例管理思路，概念与spring的一致。
  * 具体的类实现并不一定需要将构造方法置为private，初始化一个自身唯一实例在内部；可以利用像spring这样的容器实现单例的管理。
+ * <p>
+ * 注意JSR-330 Inject标准下也有叫<code>Singleton</code>的注解。它是会被各种容器作为Scope类型识别、利用的功能注解，注意区分。
  * 
+ * @see javax.inject.Singleton
  * @see Prototype
  * @see ThreadSafe
  * @author sin_sin

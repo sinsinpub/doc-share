@@ -4,24 +4,21 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.annotation.Resource;
 
 import jodd.util.ReflectUtil;
 
-import com.alibaba.druid.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.google.inject.AbstractModule;
-import com.google.inject.Binder;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.Module;
-import com.google.inject.Provider;
 import com.google.inject.name.Names;
 import com.jfinal.ext.kit.AnnotatedClassesScanner;
 import com.jfinal.log.Logger;
@@ -36,8 +33,8 @@ import com.jfinal.plugin.IPlugin;
  * 顺便Guice的一般类到类Inject要求对interface类注入实现类，所以组件应面向接口编写。<br>
  * <p>
  * JFinal作者主张自己new实例，而Google不主张自动扫描来绑定，反正要怎么用，你看着办吧(笑。不完全整合时需要注意的就是哪些实例是JFinal创建管理的，哪些是在Guice
- * Module内由它管理的。 例如Controller、Interceptor实例都是由JFinal管理的，无法直接从Guice注入依赖。
- * 目前的示例实现的是由Guice管理Model层之后的实例注入和它们间的依赖关系图。
+ * Module内由它管理的。 例如Controller、Interceptor实例都是由JFinal管理的，无法直接从Guice注入依赖。要使用Guice的AOP也需要继承AOP
+ * Alliance的接口来写拦截器，不能用JFinal的。目前的示例实现的是由Guice管理Model层之后的实例注入和它们间的依赖关系图，拦截增强仍然使用JFinal的。
  * 
  * @author sin_sin
  * @version $Date: Nov 12, 2015 $
@@ -48,8 +45,9 @@ public class GuicePlugin implements IPlugin {
     protected final Logger logger = Logger.getLogger(getClass());
 
     protected static Injector injector;
-    private Set<Class> excludeClasses = Sets.newHashSet();
-    private Map<Class, Object> bindMap = Maps.newHashMap();
+    private final Set<Class> excludeClasses = Sets.newHashSet();
+    private final Map<Class, Object> bindMap = Maps.newHashMap();
+    private boolean disableClassScan = false;
     private ConfigureModuleCallback moduleCallback;
 
     /**
@@ -59,7 +57,7 @@ public class GuicePlugin implements IPlugin {
     }
 
     /**
-     * 手工添加绑定.
+     * 在插件开始前手工添加绑定.
      * 
      * @param from 源接口类
      * @param to 目标实现类
@@ -71,7 +69,7 @@ public class GuicePlugin implements IPlugin {
     }
 
     /**
-     * 手工添加绑定.
+     * 在插件开始前手工添加绑定.
      * 
      * @param from 源接口类
      * @param name 被@Named注解声明的名称
@@ -84,7 +82,7 @@ public class GuicePlugin implements IPlugin {
     }
 
     /**
-     * 添加扫描排除类.
+     * 在插件开始前添加扫描排除类.
      * 
      * @param types 要排除的类
      * @return GuicePlugin
@@ -99,7 +97,7 @@ public class GuicePlugin implements IPlugin {
     }
 
     /**
-     * 添加扫描排除类.
+     * 在插件开始前添加扫描排除类.
      * 
      * @param typeCollection 要排除的类
      * @return GuicePlugin
@@ -111,20 +109,57 @@ public class GuicePlugin implements IPlugin {
         return this;
     }
 
+    /**
+     * @return 是否禁止注解扫描
+     */
+    public boolean isDisableClassScan() {
+        return disableClassScan;
+    }
+
+    /**
+     * 完全禁止插件使用注解自动扫描，模块配置和绑定全部手工进行.
+     * 
+     * @param disableClassScan 默认为false
+     * @return GuicePlugin
+     */
+    public GuicePlugin setDisableClassScan(boolean disableClassScan) {
+        this.disableClassScan = disableClassScan;
+        return this;
+    }
+
+    /**
+     * @return 当前回调方法实例
+     */
     public ConfigureModuleCallback getModuleCallback() {
         return moduleCallback;
     }
 
+    /**
+     * 设置Guice Module配置回调方法.
+     * 
+     * @param moduleCallback 想要更详细配置Module时用
+     * @return GuicePlugin
+     */
     public GuicePlugin setModuleCallback(ConfigureModuleCallback moduleCallback) {
         this.moduleCallback = moduleCallback;
         return this;
     }
 
+    /**
+     * 静态代理Guice Injector的getInstance方法，从Guice管理依赖关系中获取某个类的实例.
+     * 
+     * @param <T> 实例类型
+     * @param type 类类型
+     * @return 实例
+     */
     public static <T> T getInstance(Class<T> type) {
         Preconditions.checkState(injector != null, "Guice plugin has not been started.");
         return injector.getInstance(type);
     }
 
+    /**
+     * @return Guice的Injector实例，为null表示插件未开始
+     */
     public static Injector getInjector() {
         return injector;
     }
@@ -134,8 +169,10 @@ public class GuicePlugin implements IPlugin {
         if (isRunning()) {
             return false;
         }
-        scanClassPathForBindingDefinition();
-        injector = Guice.createInjector(new DefaultAutoBindingModule());
+        if (!isDisableClassScan()) {
+            scanClassPathForBindingDefinition();
+        }
+        injector = Guice.createInjector(createAutoBindingModule());
         return true;
     }
 
@@ -147,8 +184,20 @@ public class GuicePlugin implements IPlugin {
         return true;
     }
 
+    /**
+     * @return 插件是否已经开始(Guice Injector是否创建)
+     */
     public static boolean isRunning() {
         return injector != null;
+    }
+
+    /**
+     * 子类可覆盖实现.
+     * 
+     * @return DefaultAutoBindingModule
+     */
+    protected Module createAutoBindingModule() {
+        return new DefaultAutoBindingModule(bindMap, getModuleCallback());
     }
 
     protected void scanClassPathForBindingDefinition() {
@@ -180,9 +229,7 @@ public class GuicePlugin implements IPlugin {
                 Resource resOnMethod = method.getAnnotation(Resource.class);
                 if (resOnMethod != null) {
                     Integer paramIndex = 0;
-                    if (StringUtils.isEmpty(resOnMethod.mappedName())) {
-                        paramIndex = 0;
-                    } else {
+                    if (StringUtils.isNumeric(resOnMethod.mappedName())) {
                         paramIndex = Integer.valueOf(resOnMethod.mappedName());
                     }
                     Class paramType = method.getParameterTypes()[paramIndex];
@@ -212,46 +259,6 @@ public class GuicePlugin implements IPlugin {
             logger.debug(String.format("No implement declared for [%s], Guice will do JIT binding.",
                     type.getSimpleName()));
         }
-    }
-
-    /**
-     * 实现自动简单绑定的默认Guice Module.
-     */
-    protected class DefaultAutoBindingModule extends AbstractModule {
-        @Override
-        public void configure() {
-            for (Entry<Class, Object> entry : bindMap.entrySet()) {
-                Class bindSrc = entry.getKey();
-                Object bindTarget = entry.getValue();
-                if (bindSrc != null) {
-                    if (bindTarget instanceof Class) {
-                        bind(bindSrc).to((Class) bindTarget);
-                    } else if (bindTarget instanceof Key) {
-                        // 这里Key被我们特殊用法了，里面的类型是目标实现类，不是绑定源
-                        Key key = (Key) bindTarget;
-                        bind(bindSrc).annotatedWith(key.getAnnotation()).to(
-                                key.getTypeLiteral().getRawType());
-                    } else if (bindTarget instanceof Provider) {
-                        bind(bindSrc).toProvider((Provider) bindTarget);
-                    } else {
-                        bind(bindSrc);
-                    }
-                }
-            }
-            if (moduleCallback != null) {
-                moduleCallback.configure(binder());
-            }
-        }
-    }
-
-    /**
-     * 在默认Module执行完之后会被调用的回调，可以做更多配置操作.
-     */
-    public interface ConfigureModuleCallback {
-        /**
-         * 和 {@link Module#configure(Binder)} 一样.
-         */
-        void configure(Binder binder);
     }
 
 }
