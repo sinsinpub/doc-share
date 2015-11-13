@@ -39,13 +39,11 @@ public class WebAppConfig extends JFinalConfig {
     public static final String OBJECT_NAME = "doc-share:type=Config,name=WebAppConfig";
     private static final Logger LOG = Logger.getLogger(WebAppConfig.class);
     private static Prop appCfg = PropKit.use("app-default.properties");
-
-    public static Prop getProps() {
-        return appCfg;
-    }
+    private static Constants constants;
 
     public void configConstant(Constants me) {
         printBanner();
+        constants = me;
         // 尝试从文件系统特定位置读取配置文件来替换默认的
         try {
             Prop runtimeCfg = PropKit.use(new File("./conf/runtime.properties"));
@@ -146,6 +144,20 @@ public class WebAppConfig extends JFinalConfig {
             LOG.error("Database tables has not been initialized yet.");
             DataSourceInitializer.initTablesAndData();
         }
+    }
+
+    /**
+     * @return 应用配置属性
+     */
+    public static Prop getProps() {
+        return appCfg;
+    }
+
+    /**
+     * @return JFinal常量参数
+     */
+    public static Constants getConstants() {
+        return constants;
     }
 
     @ManagedAttribute(writable = false, description = "当前配置属性")

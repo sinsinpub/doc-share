@@ -24,8 +24,8 @@ define([ 'jquery', 'header', 'jquery.fileupload' ], function($, header, jqfu) {
                 autoUpload : false,
                 // acceptFileTypes :
                 // /(\.|\/)(gif|jpe?g|png|txt|md|docx?|pptx?|xlsx?)$/i,
-                maxFileSize : 9999000, // 10Mo
-                maxChunkSize : 1000000, // 1Mo
+                maxFileSize : 19999000, // 10Mo
+                //maxChunkSize : 1000000, // 1Mo
                 // Enable image resizing, except for Android and Opera,
                 // which actually support image resizing, but fail to
                 // send Blob objects via XHR requests:
