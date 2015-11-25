@@ -9,7 +9,7 @@ Simple Web App for quickly sharing small files & document snippets.
 
 ```
 git clone this-repo.git
-````
+```
 
 * 进入this-repo目录，构建、打包，生成`doc-share.war`
 
