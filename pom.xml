@@ -313,6 +313,7 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
                 <version>1.4</version>
+                <!-- Comment out this if executable git not ready for system environment -->
                 <executions>
                     <execution>
                         <phase>validate</phase>

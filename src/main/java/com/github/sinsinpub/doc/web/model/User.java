@@ -59,7 +59,7 @@ public class User extends Model<User> {
     /**
      * 用Guice DI注入实现，然后再添加拦截增强.
      * <p>
-     * 绑定方法除了按Guice标准，还利用了JSR-330注解@Singleton以及扫描JSR-250注解@Resouirce。
+     * 绑定方法除了按Guice标准，还利用了JSR-330注解@Singleton以及扫描JSR-250注解@Resource。
      * 
      * @see GuicePlugin 详细可以参考GuicePlugin扩展
      */
