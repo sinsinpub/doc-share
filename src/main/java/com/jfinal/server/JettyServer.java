@@ -28,6 +28,9 @@ import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.server.session.AbstractSessionManager;
 import org.eclipse.jetty.server.session.HashSessionManager;
 import org.eclipse.jetty.server.session.SessionHandler;
+import org.eclipse.jetty.server.ssl.SslConnector;
+import org.eclipse.jetty.server.ssl.SslSelectChannelConnector;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.webapp.WebInfConfiguration;
 
@@ -42,8 +45,29 @@ import com.jfinal.kit.StrKit;
  */
 class JettyServer implements IServer {
 
+    public static final String SSL_PORT_PROPERTY = "org.eclipse.jetty.ssl.port";
+    public static final String KEYSTORE_PATH_PROPERTY = "org.eclipse.jetty.ssl.keystorePath";
+    public static final String KEYSTORE_TYPE_PROPERTY = "org.eclipse.jetty.ssl.keystoreType";
+    public static final String DEFAULT_KEYSTORE_PATH = "conf/keystore.jks";
+    /**
+     * Just used with default demo keystore.jks. Set yours via
+     * <code>org.eclipse.jetty.ssl.keypassword</code>
+     */
+    private static final String DEFAULT_KEYPASSWORD = "doc-share";
+    public static final String[] UNSAFE_PROTOCOLS = { "SSL", "SSLv2", "SSLv2Hello", "SSLv3" };
+    public static final String[] UNSAFE_CIPHER_SUITES = { "SSL_RSA_WITH_DES_CBC_SHA",
+            "SSL_DHE_RSA_WITH_DES_CBC_SHA", "SSL_DHE_DSS_WITH_DES_CBC_SHA",
+            "SSL_RSA_EXPORT_WITH_RC4_40_MD5", "SSL_RSA_EXPORT_WITH_DES40_CBC_SHA",
+            "SSL_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA", "SSL_DHE_RSA_WITH_3DES_EDE_CBC_SHA",
+            "SSL_DHE_DSS_WITH_3DES_EDE_CBC_SHA", "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256",
+            "TLS_DHE_DSS_WITH_AES_256_CBC_SHA256", "TLS_DHE_RSA_WITH_AES_256_CBC_SHA",
+            "TLS_DHE_DSS_WITH_AES_256_CBC_SHA", "TLS_DHE_RSA_WITH_AES_128_CBC_SHA256",
+            "TLS_DHE_DSS_WITH_AES_128_CBC_SHA256", "TLS_DHE_RSA_WITH_AES_128_CBC_SHA",
+            "TLS_DHE_DSS_WITH_AES_128_CBC_SHA", "SSL_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA" };
+
     private String webAppDir;
     private int port;
+    private int sslPort;
     private String context;
     private int scanIntervalSeconds;
     private boolean enableGzip = false;
@@ -98,6 +122,11 @@ class JettyServer implements IServer {
         SelectChannelConnector connector = new SelectChannelConnector();
         connector.setPort(port);
         server.addConnector(connector);
+
+        if (getSslPort() > 0) {
+            configureSsl(getSslPort(), server);
+        }
+
         webApp = new WebAppContext();
         webApp.setThrowUnavailableOnStartupException(true); // 在启动过程中允许抛出异常终止启动并退出 JVM
         webApp.setContextPath(context);
@@ -156,6 +185,28 @@ class JettyServer implements IServer {
             System.exit(100);
         }
         return;
+    }
+
+    static void configureSsl(int sslPort, Server server) {
+        SslContextFactory sslContextFactory = new SslContextFactory(false);
+        sslContextFactory.setKeyStorePath(System.getProperty(KEYSTORE_PATH_PROPERTY,
+                DEFAULT_KEYSTORE_PATH));
+        if (System.getProperty(KEYSTORE_TYPE_PROPERTY) != null) {
+            sslContextFactory.setKeyStoreType(System.getProperty(KEYSTORE_TYPE_PROPERTY));
+        }
+        if (System.getProperty(SslContextFactory.KEYPASSWORD_PROPERTY) == null) {
+            sslContextFactory.setKeyManagerPassword(DEFAULT_KEYPASSWORD);
+        } else {
+            sslContextFactory.setKeyManagerPassword(null);
+        }
+        sslContextFactory.setAllowRenegotiate(false);
+        sslContextFactory.setNeedClientAuth(false);
+        sslContextFactory.setWantClientAuth(false);
+        sslContextFactory.setExcludeProtocols(UNSAFE_PROTOCOLS);
+        sslContextFactory.setExcludeCipherSuites(UNSAFE_CIPHER_SUITES);
+        SslConnector sslConnector = new SslSelectChannelConnector(sslContextFactory);
+        sslConnector.setPort(sslPort);
+        server.addConnector(sslConnector);
     }
 
     static void changeClassLoader(WebAppContext webApp) {
@@ -234,6 +285,16 @@ class JettyServer implements IServer {
             }
         }
         return false;
+    }
+
+    public int getSslPort() {
+        String portProp = System.getProperty(SSL_PORT_PROPERTY);
+        if (sslPort == 0 && portProp != null) {
+            sslPort = Integer.valueOf(portProp);
+        }
+        if (sslPort < 0 || sslPort > 65535 || sslPort == port)
+            throw new IllegalArgumentException("Invalid port of secured server: " + getSslPort());
+        return sslPort;
     }
 
     public boolean isEnableGzip() {

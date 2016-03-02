@@ -11,7 +11,7 @@ public class WarEmbeddedBootstrap {
     public static void main(String[] args) {
         int port = 80;
         if (args.length >= 1) {
-            port = Integer.parseInt(args[0]);
+            port = Integer.valueOf(args[0]);
         }
 
         String context = "/";
@@ -20,7 +20,14 @@ public class WarEmbeddedBootstrap {
         }
 
         JettyWarServer server = new JettyWarServer(port, context);
+
+        if (args.length >= 3) {
+            int sslPort = Integer.valueOf(args[2]);
+            if (sslPort > 0) {
+                server.setSslPort(sslPort);
+            }
+        }
+
         server.start();
     }
-
 }

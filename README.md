@@ -26,7 +26,7 @@ mvn test -Dtest=com.github.sinsinpub.doc.web.model.manual.InitDbTables
 * 启动内嵌的jetty服务
 
 ```
-java -jar target\doc-share.war {port} {context}
+java -jar target\doc-share.war {port} {context} {sslPort}
 ```
 
 * 如果没有加port等参数并且顺利启动，浏览器打开`http://localhost/`即可Enjoy!
@@ -63,6 +63,12 @@ cp src/main/resources/log.properties conf/
 ```
 doc-share.sh start/stop/restart/status
 ```
+
+* 启用HTTPS
+    * 将自己的证书用`keytool`工具导入到JKS格式文件，放到`conf/keystore.jks`。详细可参考[Jetty文档](https://www.eclipse.org/jetty/documentation/current/configuring-ssl.html)。
+    * 启动服务之前将keystore的密码配置到适当位置，例如`JAVA_OPTS`的`-Dorg.eclipse.jetty.ssl.keypassword=`(可加混淆)。
+    * 启动服务时只要指定了SSL加密端口号即可启用HTTPS。端口号可以在命令行参数上指定，也可以添加`-Dorg.eclipse.jetty.ssl.port=`来配置。
+    * 可以复制使用项目带的`src/main/resources/deploy/keystore.jks`进行快速测试，密码不用配置。
 
 ## Developer Guide
 

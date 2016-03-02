@@ -24,6 +24,7 @@ import com.jfinal.kit.StrKit;
 public class JettyWarServer implements IServer {
 
     private int port;
+    private int sslPort = 0;
     private String context;
     private boolean enableGzip = true;
     private boolean running = false;
@@ -68,14 +69,20 @@ public class JettyWarServer implements IServer {
     }
 
     private void doStart() {
-        if (!JettyServer.available(port))
-            throw new IllegalStateException("port: " + port + " already in use!");
+        if (!JettyServer.available(getPort()))
+            throw new IllegalStateException("port: " + getPort() + " already in use!");
 
         System.out.println("Starting JFinal " + Const.JFINAL_VERSION);
-        server = new Server(port);
-        webApp = new WebAppContext(getWarLocation(), context);
+        server = new Server(getPort());
+        server.setStopAtShutdown(true);
         // 不要返回版本号
         server.setSendServerVersion(false);
+
+        if (getSslPort() > 0) {
+            JettyServer.configureSsl(getSslPort(), server);
+        }
+
+        webApp = new WebAppContext(getWarLocation(), context);
         if (isEnableGzip()) {
             // 对应响应内容启用GZIP压缩
             GzipHandler gzipHandler = new GzipHandler();
@@ -97,7 +104,7 @@ public class JettyWarServer implements IServer {
         clearTldSystemUri();
 
         try {
-            System.out.println("Starting web server on port: " + port);
+            System.out.println("Starting web server on port: " + getPort());
             server.start();
             System.out.println("Starting Complete. Welcome To The JFinal World :)");
             server.join();
@@ -139,6 +146,20 @@ public class JettyWarServer implements IServer {
 
     public void setPort(int port) {
         this.port = port;
+    }
+
+    public int getSslPort() {
+        String portProp = System.getProperty(JettyServer.SSL_PORT_PROPERTY);
+        if (sslPort == 0 && portProp != null) {
+            sslPort = Integer.valueOf(portProp);
+        }
+        if (sslPort < 0 || sslPort > 65535 || sslPort == getPort())
+            throw new IllegalArgumentException("Invalid port of secured server: " + getSslPort());
+        return sslPort;
+    }
+
+    public void setSslPort(int sslPort) {
+        this.sslPort = sslPort;
     }
 
     public String getContext() {
