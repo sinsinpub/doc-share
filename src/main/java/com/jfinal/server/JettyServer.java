@@ -18,9 +18,11 @@ package com.jfinal.server;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.net.DatagramSocket;
 import java.net.ServerSocket;
 
+import org.eclipse.jetty.jmx.MBeanContainer;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.SessionManager;
 import org.eclipse.jetty.server.handler.GzipHandler;
@@ -30,6 +32,7 @@ import org.eclipse.jetty.server.session.HashSessionManager;
 import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.server.ssl.SslConnector;
 import org.eclipse.jetty.server.ssl.SslSelectChannelConnector;
+import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.webapp.WebInfConfiguration;
@@ -71,6 +74,7 @@ class JettyServer implements IServer {
     private String context;
     private int scanIntervalSeconds;
     private boolean enableGzip = false;
+    private boolean enableJmx = true;
     private boolean running = false;
     private Server server;
     private WebAppContext webApp;
@@ -125,6 +129,10 @@ class JettyServer implements IServer {
 
         if (getSslPort() > 0) {
             configureSsl(getSslPort(), server);
+        }
+
+        if (isEnableJmx()) {
+            registerJettyMbeans(server);
         }
 
         webApp = new WebAppContext();
@@ -207,6 +215,13 @@ class JettyServer implements IServer {
         SslConnector sslConnector = new SslSelectChannelConnector(sslContextFactory);
         sslConnector.setPort(sslPort);
         server.addConnector(sslConnector);
+    }
+
+    static void registerJettyMbeans(Server server) {
+        MBeanContainer mbContainer = new MBeanContainer(ManagementFactory.getPlatformMBeanServer());
+        server.getContainer().addEventListener(mbContainer);
+        server.addBean(mbContainer);
+        mbContainer.addBean(Log.getRootLogger());
     }
 
     static void changeClassLoader(WebAppContext webApp) {
@@ -303,6 +318,14 @@ class JettyServer implements IServer {
 
     public void setEnableGzip(boolean enableGzip) {
         this.enableGzip = enableGzip;
+    }
+
+    public boolean isEnableJmx() {
+        return enableJmx;
+    }
+
+    public void setEnableJmx(boolean enableJmx) {
+        this.enableJmx = enableJmx;
     }
 
 }

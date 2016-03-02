@@ -27,6 +27,7 @@ public class JettyWarServer implements IServer {
     private int sslPort = 0;
     private String context;
     private boolean enableGzip = true;
+    private boolean enableJmx = true;
     private boolean running = false;
     private Server server;
     private WebAppContext webApp;
@@ -80,6 +81,10 @@ public class JettyWarServer implements IServer {
 
         if (getSslPort() > 0) {
             JettyServer.configureSsl(getSslPort(), server);
+        }
+
+        if (isEnableJmx()) {
+            JettyServer.registerJettyMbeans(server);
         }
 
         webApp = new WebAppContext(getWarLocation(), context);
@@ -176,6 +181,14 @@ public class JettyWarServer implements IServer {
 
     public void setEnableGzip(boolean enableGzip) {
         this.enableGzip = enableGzip;
+    }
+
+    public boolean isEnableJmx() {
+        return enableJmx;
+    }
+
+    public void setEnableJmx(boolean enableJmx) {
+        this.enableJmx = enableJmx;
     }
 
     public boolean isRunning() {
