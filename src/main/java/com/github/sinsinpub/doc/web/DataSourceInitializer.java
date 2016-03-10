@@ -5,6 +5,7 @@ import com.github.sinsinpub.doc.web.model.AuditLog;
 import com.github.sinsinpub.doc.web.model.DocFile;
 import com.github.sinsinpub.doc.web.model.User;
 import com.jfinal.ext.plugin.activerecord.AutoMappingTablesActiveRecordPlugin;
+import com.jfinal.ext.plugin.hikaricp.HikariCpPlugin;
 import com.jfinal.kit.Prop;
 import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
@@ -14,7 +15,6 @@ import com.jfinal.plugin.activerecord.IDataSourceProvider;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.Sqls;
 import com.jfinal.plugin.activerecord.dialect.AnsiSqlDialect;
-import com.jfinal.plugin.druid.DruidPlugin;
 
 /**
  * RDBMS data-source init sequence process implementation supported by JFinal.
@@ -35,6 +35,7 @@ public abstract class DataSourceInitializer {
         // C3p0Plugin dataSource = new C3p0Plugin(jdbcProps.getProperties());
 
         // Druid配置虽然麻烦些，而且jar有点大，但是可以正确被close
+        /*
         DruidPlugin dataSource = new DruidPlugin(jdbcProps.get("jdbcUrl"), jdbcProps.get("user"),
                 jdbcProps.get("password"), jdbcProps.get("driverClass"));
         dataSource.setInitialSize(jdbcProps.getInt("initialSize"));
@@ -43,6 +44,16 @@ public abstract class DataSourceInitializer {
         dataSource.setRemoveAbandoned(jdbcProps.getBoolean("removeAbandoned"));
         dataSource.setRemoveAbandonedTimeoutMillis(jdbcProps.getInt("removeAbandonedTimeoutMillis"));
         dataSource.setValidationQuery(jdbcProps.get("validationQuery"));
+        */
+
+        // 连接一个区区内嵌HSQLDB用不着Druid这大牛刀，而且超快
+        HikariCpPlugin dataSource = new HikariCpPlugin(jdbcProps.get("jdbcUrl"),
+                jdbcProps.get("user"), jdbcProps.get("password"));
+        dataSource.setPoolName("Hikari-Pool-Play")
+                .setMinimumIdle(jdbcProps.getInt("minIdle"))
+                .setMaximumPoolSize(jdbcProps.getInt("maxPoolSize"))
+                .setConnectionTestQuery(jdbcProps.get("validationQuery"))
+                .setRegisterMbeans(true);
 
         return dataSource;
     }
